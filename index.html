@@ -419,9 +419,14 @@
         <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
           <span class="text-[11px] font-bold text-charcoal block">➕ 新增自訂準備項目</span>
           <div class="flex space-x-2 relative z-50">
+         <!-- 新增自訂準備項目 (已修正下拉按鈕失效問題) -->
+        <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
+          <span class="text-[11px] font-bold text-charcoal block">➕ 新增自訂準備項目</span>
+          <div class="flex space-x-2 relative z-50">
             <!-- 自訂動畫下拉選單：打包分類 -->
             <div class="relative flex-shrink-0" id="dd-pack-cat">
-              <button id="btn-pack-cat" type="button" class="flex items-center justify-between space-x-1 text-xs px-2 py-2 rounded-xl border border-stone-200 bg-stone-50 text-charcoal focus:outline-none h-full" onclick="toggleDropdown('panel-pack-cat', this)">
+              <!-- 這裡補上了關鍵的 dropdown-btn class -->
+              <button id="btn-pack-cat" type="button" class="dropdown-btn flex items-center justify-between space-x-1 text-xs px-2 py-2 rounded-xl border border-stone-200 bg-stone-50 text-charcoal focus:outline-none h-full" onclick="toggleDropdown('panel-pack-cat', this)">
                 <span id="lbl-pack-cat">🎒 隨身</span>
                 <svg class="dropdown-arrow w-3 h-3 text-muted transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
@@ -434,13 +439,13 @@
             </div>
             
             <input type="text" id="packing-custom-name" placeholder="輸入物品名稱..." class="flex-1 text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-sage bg-linen/40">
-            <button onclick="addCustomPackingItem()" class="px-3.5 py-2 bg-sage text-white text-xs font-medium rounded-xl shadow-2xs">新增</button>
+            <button type="button" onclick="addCustomPackingItem()" class="px-3.5 py-2 bg-sage hover:bg-sage-dark text-white text-xs font-medium rounded-xl shadow-2xs transition active:scale-95">新增</button>
           </div>
         </div>
-      </div>
     </main>
 
     <!-- MODAL: TICKETS -->
+      <!-- MODAL: TICKETS -->
     <div id="modal-tickets" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
         <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
@@ -451,25 +456,36 @@
               <p class="text-[10px] text-muted">點擊勾選即可標示為已完成（同步至雲端）</p>
             </div>
           </div>
-          <button onclick="closeTicketModal()" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
+          <button onclick="closeTicketModal()" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100 transition active:scale-95">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
-        <div class="p-4 overflow-y-auto space-y-3 text-xs text-charcoal">
+        
+        <div class="p-4 overflow-y-auto space-y-3 text-xs text-charcoal relative">
+          <!-- 清單容器 -->
           <div id="checklist-container" class="space-y-3"></div>
-          <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2 mt-4">
+          
+          <!-- 統一風格的新增面板 (與行李清單對齊) -->
+          <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2 mt-4 relative z-10">
             <span class="text-[11px] font-bold text-charcoal block">➕ 新增自訂預約提醒</span>
-            <div class="flex space-x-2">
-              <input type="text" id="input-new-check-title" placeholder="例如：藥妝免稅優惠券確認..." class="flex-1 text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-sage bg-linen/40">
-              <button onclick="addCustomChecklistItem()" class="px-3.5 py-2 bg-sage text-white text-xs font-medium rounded-xl shadow-2xs">新增</button>
+            <div class="space-y-2">
+              <input type="text" id="input-new-check-title" placeholder="輸入標題 (例：藥妝免稅券)..." class="w-full text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-sage bg-linen/40">
+              <div class="flex space-x-2">
+                <input type="text" id="input-new-check-desc" placeholder="備註或時間 (選填)..." class="flex-1 text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-sage bg-linen/40">
+                <button type="button" onclick="addCustomChecklistItem()" class="px-3.5 py-2 bg-sage hover:bg-sage-dark text-white text-xs font-medium rounded-xl shadow-2xs transition active:scale-95 cursor-pointer relative z-20">新增</button>
+              </div>
             </div>
           </div>
         </div>
+        
         <div class="p-4 bg-stone-100/80 border-t border-stone-200 text-center">
-          <button onclick="closeTicketModal()" class="w-full py-2.5 bg-sage text-white text-xs font-medium rounded-xl shadow-sm">完成並關閉</button>
+          <button onclick="closeTicketModal()" class="w-full py-2.5 bg-sage hover:bg-sage-dark text-white text-xs font-medium rounded-xl shadow-sm transition active:scale-98">完成並關閉</button>
         </div>
       </div>
     </div>
+
+
+
 
     <!-- MODAL: FUJI -->
     <div id="modal-fuji" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -1189,12 +1205,37 @@
     }
     function deleteChecklistItem(index) { checklistData.splice(index, 1); renderChecklist(); scheduleAutoSync(); showToast("已移除", "🗑️"); }
     function addCustomChecklistItem() {
-      const title = document.getElementById("input-new-check-title").value.trim();
-      if (!title) return;
-      checklistData.push({ id: `chk-${Date.now()}`, title: title, badge: "自訂提醒", time: "", desc: "", alert: "", done: false });
-      document.getElementById("input-new-check-title").value = "";
-      renderChecklist(); scheduleAutoSync(); showToast("已加入清單！", "✨");
+      const titleInput = document.getElementById("input-new-check-title");
+      const descInput = document.getElementById("input-new-check-desc");
+      
+      const title = titleInput.value.trim();
+      const desc = descInput ? descInput.value.trim() : "";
+      
+      if (!title) {
+        showToast("請輸入憑證或待辦標題", "⚠️");
+        return;
+      }
+      
+      checklistData.push({ 
+        id: `chk-${Date.now()}`, 
+        title: title, 
+        badge: "自訂提醒", 
+        time: "隨時", 
+        desc: desc, 
+        alert: "", 
+        done: false 
+      });
+      
+      titleInput.value = "";
+      if (descInput) descInput.value = "";
+      
+      renderChecklist(); 
+      scheduleAutoSync(); 
+      showToast("已加入清單！", "✨");
     }
+
+
+
     function updateChecklistSummary() {
       const doneCount = checklistData.filter(i => i.done).length;
       const el = document.getElementById("home-ticket-summary");
