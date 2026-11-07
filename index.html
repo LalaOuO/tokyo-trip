@@ -31,10 +31,8 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <!-- GSAP Core & Plugins -->
+  <!-- GSAP Core -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,7 +62,7 @@
   </script>
 
   <style>
-    /* 強制禁止系統原生下拉橡皮筋效果，確保手刻下拉更新正常運作 */
+    /* 強制禁止系統原生下拉橡皮筋效果，確保全域下拉更新完美運作 */
     html, body {
       background-color: #F7F5F0;
       color: #2D3238;
@@ -97,75 +95,75 @@
   <div id="app" class="max-w-md mx-auto h-[100dvh] h-screen flex flex-col bg-linen bg-grid relative shadow-2xl overflow-hidden">
     
     <!-- Toast -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[60] bg-charcoal/95 text-white text-xs px-4 py-2 rounded-full shadow-xl transition-all duration-300 opacity-0 pointer-events-none flex items-center space-x-2">
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[80] bg-charcoal/95 text-white text-xs px-4 py-2 rounded-full shadow-xl transition-all duration-300 opacity-0 pointer-events-none flex items-center space-x-2">
       <span id="toast-icon">✨</span>
       <span id="toast-msg">已儲存變更</span>
     </div>
 
+    <!-- 全域懸浮圓餅 下拉更新指示器 (選項A 風格) -->
+    <div id="global-ptr" class="absolute top-0 left-0 right-0 z-[70] flex justify-center pointer-events-none transform -translate-y-full">
+      <div class="mt-[max(env(safe-area-inset-top),20px)] bg-white rounded-full shadow-lg p-2 flex items-center justify-center border border-stone-100">
+        <svg id="global-ptr-spinner" class="w-6 h-6 text-sage" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+    </div>
+
     <!-- HOME VIEW -->
     <main id="view-home" class="flex-1 flex flex-col overflow-hidden relative">
-      <!-- 下拉更新指示器 -->
-      <div id="ptr-indicator" class="absolute top-10 left-0 w-full flex justify-center items-center opacity-0 z-0">
-         <svg id="ptr-spinner" class="w-7 h-7 text-sage" fill="none" viewBox="0 0 24 24">
-           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-         </svg>
-      </div>
-
-      <!-- 首頁包覆層 -->
-      <div id="home-pull-wrapper" class="flex-1 flex flex-col overflow-hidden w-full relative z-10 bg-linen">
-        <div class="flex-shrink-0 px-5 pt-[max(env(safe-area-inset-top),16px)] pb-2 bg-gradient-to-b from-stone-200/50 to-linen border-b border-stone-200/50 z-10 shadow-2xs">
-          <div class="flex items-center justify-between mb-1.5">
-            <span class="inline-block px-2.5 py-0.5 bg-sage-light text-sage-dark text-[10px] font-semibold rounded-full tracking-wider uppercase">Tokyo Autumn Walk</span>
-            <div class="flex items-center space-x-1.5">
-              <button onclick="saveToCloudManual()" title="點擊同步雲端" class="flex items-center space-x-1 text-[11px] text-stone-600 hover:text-charcoal bg-white/80 hover:bg-white px-2 py-0.5 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95">
-                <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-                <span id="sync-status-text" class="text-[10px]">已同步</span>
-              </button>
-              <button onclick="openBackupModal()" class="text-stone-500 hover:text-charcoal bg-white/80 hover:bg-white p-1 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-              </button>
-            </div>
-          </div>
-          <h1 class="text-xl font-serif font-bold tracking-tight text-charcoal mb-0.5">東京八日遊 (11/10~11/17)</h1>
-          <p class="text-[10px] text-muted leading-tight">富士紅葉・昭和銀杏，澀谷潮流，經典體驗</p>
-          <div class="grid grid-cols-3 gap-1.5 mt-2">
-            <div class="bg-cardBg/95 backdrop-blur rounded-xl p-2 border border-stone-200/70 shadow-2xs text-center cursor-pointer" onclick="switchView('day', 0)">
-              <span class="block text-[9px] text-muted mb-0.5">全行程景點數</span>
-              <span id="home-total-spots" class="text-xs font-bold text-sage-dark">61 個景點 📍</span>
-            </div>
-            <div class="bg-cardBg/95 backdrop-blur rounded-xl p-2 border border-stone-200/70 shadow-2xs text-center cursor-pointer" onclick="openTicketModal()">
-              <span class="block text-[9px] text-muted mb-0.5">預約憑證與待辦</span>
-              <span id="home-ticket-summary" class="text-xs font-bold text-terracotta-dark">13 項檢視 🎫</span>
-            </div>
-            <div class="bg-cardBg/95 backdrop-blur rounded-xl p-2 border border-stone-200/70 shadow-2xs text-center cursor-pointer" onclick="openFujiNoteModal()">
-              <span class="block text-[9px] text-muted mb-0.5">重要須知與攻略</span>
-              <span class="text-xs font-bold text-dustyBlue">富士與新退稅 🗻</span>
-            </div>
-          </div>
-          <div class="mt-2 p-2.5 rounded-xl bg-amber-50/90 border border-amber-200/80 shadow-2xs">
-            <div class="flex items-center justify-between mb-0.5">
-              <div class="flex items-center space-x-1.5">
-                <span class="text-amber-800 text-xs">🔔</span>
-                <h3 class="text-[11px] font-bold text-amber-950 tracking-wide">行前預約與出發提醒</h3>
-              </div>
-              <button onclick="openTicketModal()" class="text-[10px] text-amber-800 font-semibold underline">確認清單</button>
-            </div>
-            <p class="text-[10px] text-amber-900/90 leading-tight">
-              <strong>昭和紀念公園點燈</strong>於出發前 7 天開放預約；<strong>富士回遊來回車票已訂妥</strong>，請抵達首日於 JR 售票機領取紙本票！
-            </p>
-          </div>
-          <div class="flex items-center justify-between mt-2 pt-1 px-1">
-            <h2 class="text-xs font-serif font-bold tracking-wider text-charcoal">每日行程一覽</h2>
-            <span class="text-[10px] text-muted">下拉可重新整理最新進度</span>
+      <div class="flex-shrink-0 px-5 pt-[max(env(safe-area-inset-top),16px)] pb-2 bg-gradient-to-b from-stone-200/50 to-linen border-b border-stone-200/50 z-10 shadow-2xs relative">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="inline-block px-2.5 py-0.5 bg-sage-light text-sage-dark text-[10px] font-semibold rounded-full tracking-wider uppercase">Tokyo Autumn Walk</span>
+          <div class="flex items-center space-x-1.5">
+            <button onclick="saveToCloudManual()" title="點擊同步雲端" class="flex items-center space-x-1 text-[11px] text-stone-600 hover:text-charcoal bg-white/80 hover:bg-white px-2 py-0.5 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95">
+              <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+              <span id="sync-status-text" class="text-[10px]">已同步</span>
+            </button>
+            <button onclick="openBackupModal()" class="text-stone-500 hover:text-charcoal bg-white/80 hover:bg-white p-1 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </button>
           </div>
         </div>
-        <div class="flex-1 overflow-y-auto px-5 py-3 space-y-3 overscroll-contain" id="home-day-list"></div>
+        <h1 class="text-xl font-serif font-bold tracking-tight text-charcoal mb-0.5">東京八日遊 (11/10~11/17)</h1>
+        <p class="text-[10px] text-muted leading-tight">富士紅葉・昭和銀杏，澀谷潮流，經典體驗</p>
+        <div class="grid grid-cols-3 gap-1.5 mt-2">
+          <div class="bg-cardBg/95 backdrop-blur rounded-xl p-2 border border-stone-200/70 shadow-2xs text-center cursor-pointer" onclick="switchView('day', 0)">
+            <span class="block text-[9px] text-muted mb-0.5">全行程景點數</span>
+            <span id="home-total-spots" class="text-xs font-bold text-sage-dark">61 個景點 📍</span>
+          </div>
+          <div class="bg-cardBg/95 backdrop-blur rounded-xl p-2 border border-stone-200/70 shadow-2xs text-center cursor-pointer" onclick="openTicketModal()">
+            <span class="block text-[9px] text-muted mb-0.5">預約憑證與待辦</span>
+            <span id="home-ticket-summary" class="text-xs font-bold text-terracotta-dark">13 項檢視 🎫</span>
+          </div>
+          <div class="bg-cardBg/95 backdrop-blur rounded-xl p-2 border border-stone-200/70 shadow-2xs text-center cursor-pointer" onclick="openFujiNoteModal()">
+            <span class="block text-[9px] text-muted mb-0.5">重要須知與攻略</span>
+            <span class="text-xs font-bold text-dustyBlue">富士與新退稅 🗻</span>
+          </div>
+        </div>
+        <div class="mt-2 p-2.5 rounded-xl bg-amber-50/90 border border-amber-200/80 shadow-2xs">
+          <div class="flex items-center justify-between mb-0.5">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-amber-800 text-xs">🔔</span>
+              <h3 class="text-[11px] font-bold text-amber-950 tracking-wide">行前預約與出發提醒</h3>
+            </div>
+            <button onclick="openTicketModal()" class="text-[10px] text-amber-800 font-semibold underline">確認清單</button>
+          </div>
+          <p class="text-[10px] text-amber-900/90 leading-tight">
+            <strong>昭和紀念公園點燈</strong>於出發前 7 天開放預約；<strong>富士回遊來回車票已訂妥</strong>，請抵達首日於 JR 售票機領取紙本票！
+          </p>
+        </div>
+        <div class="flex items-center justify-between mt-2 pt-1 px-1">
+          <h2 class="text-xs font-serif font-bold tracking-wider text-charcoal">每日行程一覽</h2>
+          <span class="text-[10px] text-muted">下拉可重新整理最新進度</span>
+        </div>
       </div>
+      <!-- 共用 scroll 區域，套用 ptr-container 類別供下拉偵測 -->
+      <div class="ptr-container flex-1 overflow-y-auto px-5 py-3 space-y-3 overscroll-contain" id="home-day-list"></div>
     </main>
 
     <!-- DAY VIEW -->
-    <main id="view-day" class="hidden flex-1 flex flex-col overflow-hidden">
+    <main id="view-day" class="hidden flex-1 flex flex-col overflow-hidden relative">
       <div class="flex-shrink-0 z-30 bg-linen/95 backdrop-blur-md border-b border-stone-200/80 shadow-2xs">
         <div class="px-4 pt-[max(env(safe-area-inset-top),16px)] pb-2 flex items-center justify-between">
           <button onclick="navigateBack()" class="flex items-center space-x-1 text-xs text-charcoal font-medium py-1 px-2 rounded-lg hover:bg-stone-200/60 transition active:scale-95">
@@ -180,7 +178,7 @@
         <div class="px-4 py-2 bg-stone-100/70 border-t border-stone-200/60 overflow-x-auto no-scrollbar flex space-x-2" id="day-pill-container"></div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-5 pb-8 overscroll-contain">
+      <div class="ptr-container flex-1 overflow-y-auto p-5 pb-8 overscroll-contain">
         <div class="relative rounded-2xl overflow-hidden shadow-sm border border-stone-200 bg-white">
           <div class="h-44 w-full relative">
             <img id="detail-hero-img" src="" alt="Cover" referrerpolicy="no-referrer" class="w-full h-full object-cover transition-all duration-200">
@@ -244,7 +242,7 @@
           <div id="meal-candidate-container" class="space-y-2"></div>
           <div class="flex items-center space-x-2 mt-2.5">
             <input type="text" id="input-new-meal" placeholder="新增口袋餐廳或備案..." class="flex-1 text-xs px-3 py-2 rounded-xl border border-stone-200 focus:outline-none focus:border-sage bg-white shadow-2xs">
-            <button onclick="addCustomMealCandidate()" class="px-3.5 py-2 bg-sage text-white text-xs font-medium rounded-xl shadow-2xs">新增</button>
+            <button onclick="addCustomMealCandidate()" class="px-3.5 py-2 bg-sage text-white text-xs font-medium rounded-xl shadow-2xs transition active:scale-95">新增</button>
           </div>
         </div>
 
@@ -261,7 +259,7 @@
     </main>
 
     <!-- EXPENSE VIEW -->
-    <main id="view-expense" class="hidden flex-1 flex flex-col overflow-hidden">
+    <main id="view-expense" class="hidden flex-1 flex flex-col overflow-hidden relative">
       <div class="flex-shrink-0 z-30 bg-linen/95 backdrop-blur-md px-4 pt-[max(env(safe-area-inset-top),16px)] pb-2.5 border-b border-stone-200/80 flex items-center justify-between shadow-2xs">
         <button onclick="navigateBack()" class="flex items-center space-x-1 text-xs text-charcoal font-medium py-1 px-2 rounded-lg hover:bg-stone-200/60 transition active:scale-95">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -274,7 +272,7 @@
         </div>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-5 space-y-4 pb-8 overscroll-contain">
+      <div class="ptr-container flex-1 overflow-y-auto p-5 space-y-4 pb-8 overscroll-contain">
         <div class="bg-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-2xs">
           <div class="flex justify-between items-center mb-2">
             <div>
@@ -301,14 +299,12 @@
             <h3 class="text-xs font-bold text-charcoal flex items-center space-x-1">
               <span>➕</span><span>記一筆花費</span>
             </h3>
-            <!-- 自訂動畫下拉選單：日期 -->
             <div class="relative w-auto" id="dd-expense-day">
               <button type="button" class="dropdown-btn flex items-center justify-between space-x-1 text-[11px] font-medium bg-stone-100 border border-stone-200 rounded-lg px-2 py-1.5 text-charcoal focus:outline-none" onclick="toggleDropdown('panel-day', this)">
                 <span id="lbl-expense-day">行前支出 (機票/住宿)</span>
                 <svg class="dropdown-arrow w-3 h-3 text-muted transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
               <div id="panel-day" class="dropdown-panel absolute z-50 right-0 mt-1 w-44 bg-white border border-stone-200 rounded-xl shadow-lg py-1 flex flex-col hidden origin-top scale-y-0 opacity-0 transition-all duration-300 ease-[cubic-bezier(.3,1.3,.5,1)]">
-                <!-- 選項透過 JS 生成 -->
               </div>
               <input type="hidden" id="expense-input-day" value="0">
             </div>
@@ -340,7 +336,6 @@
             </div>
             <div>
               <label class="block text-[10px] font-bold text-muted mb-1">支付方式</label>
-              <!-- 自訂動畫下拉選單：支付方式 -->
               <div class="relative w-full" id="dd-expense-pay">
                 <button type="button" class="dropdown-btn w-full flex items-center justify-between text-xs p-2 border border-stone-200 rounded-xl bg-white text-charcoal focus:outline-none" onclick="toggleDropdown('panel-pay', this)">
                   <span id="lbl-expense-pay">現金</span>
@@ -373,7 +368,7 @@
     </main>
 
     <!-- PACKING VIEW -->
-    <main id="view-packing" class="hidden flex-1 flex flex-col overflow-hidden">
+    <main id="view-packing" class="hidden flex-1 flex flex-col overflow-hidden relative">
       <div class="flex-shrink-0 z-30 bg-linen/95 backdrop-blur-md px-4 pt-[max(env(safe-area-inset-top),16px)] pb-2.5 border-b border-stone-200/80 flex items-center justify-between shadow-2xs">
         <button onclick="navigateBack()" class="flex items-center space-x-1 text-xs text-charcoal font-medium py-1 px-2 rounded-lg hover:bg-stone-200/60 transition active:scale-95">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -383,7 +378,7 @@
         <span id="packing-progress-badge" class="text-[11px] font-mono text-sage-dark bg-sage-light px-2 py-0.5 rounded-full font-bold">0% 完成</span>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-5 space-y-4 pb-8 overscroll-contain">
+      <div class="ptr-container flex-1 overflow-y-auto p-5 space-y-4 pb-8 overscroll-contain">
         <div class="bg-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-2xs">
           <div class="flex items-center justify-between mb-2 pb-2 border-b border-stone-100">
             <div class="flex items-center space-x-1.5">
@@ -419,13 +414,7 @@
         <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
           <span class="text-[11px] font-bold text-charcoal block">➕ 新增自訂準備項目</span>
           <div class="flex space-x-2 relative z-50">
-         <!-- 新增自訂準備項目 (已修正下拉按鈕失效問題) -->
-        <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
-          <span class="text-[11px] font-bold text-charcoal block">➕ 新增自訂準備項目</span>
-          <div class="flex space-x-2 relative z-50">
-            <!-- 自訂動畫下拉選單：打包分類 -->
             <div class="relative flex-shrink-0" id="dd-pack-cat">
-              <!-- 這裡補上了關鍵的 dropdown-btn class -->
               <button id="btn-pack-cat" type="button" class="dropdown-btn flex items-center justify-between space-x-1 text-xs px-2 py-2 rounded-xl border border-stone-200 bg-stone-50 text-charcoal focus:outline-none h-full" onclick="toggleDropdown('panel-pack-cat', this)">
                 <span id="lbl-pack-cat">🎒 隨身</span>
                 <svg class="dropdown-arrow w-3 h-3 text-muted transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -442,10 +431,10 @@
             <button type="button" onclick="addCustomPackingItem()" class="px-3.5 py-2 bg-sage hover:bg-sage-dark text-white text-xs font-medium rounded-xl shadow-2xs transition active:scale-95">新增</button>
           </div>
         </div>
+      </div>
     </main>
 
     <!-- MODAL: TICKETS -->
-      <!-- MODAL: TICKETS -->
     <div id="modal-tickets" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
         <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
@@ -462,10 +451,8 @@
         </div>
         
         <div class="p-4 overflow-y-auto space-y-3 text-xs text-charcoal relative">
-          <!-- 清單容器 -->
           <div id="checklist-container" class="space-y-3"></div>
           
-          <!-- 統一風格的新增面板 (與行李清單對齊) -->
           <div class="p-3 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2 mt-4 relative z-10">
             <span class="text-[11px] font-bold text-charcoal block">➕ 新增自訂預約提醒</span>
             <div class="space-y-2">
@@ -483,9 +470,6 @@
         </div>
       </div>
     </div>
-
-
-
 
     <!-- MODAL: FUJI -->
     <div id="modal-fuji" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -658,9 +642,30 @@
           <button onclick="closeBackupModal()" class="w-full py-2 bg-stone-200 text-charcoal text-xs font-medium rounded-xl">關閉</button>
         </div>
       </div>
-    </div>  
+    </div>
 
-  
+    <!-- MODAL: JSON EXPORT & COPY -->
+    <div id="modal-json-export" class="fixed inset-0 z-[70] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
+        <div class="p-4 bg-stone-50 border-b border-stone-200 flex items-center space-x-1.5 justify-between">
+          <div class="flex items-center space-x-1.5">
+            <span>📋</span>
+            <h3 class="text-sm font-bold text-charcoal">行程資料代碼 (JSON)</h3>
+          </div>
+          <button onclick="closeModal('modal-json-export')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-200/60">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="p-4 overflow-y-auto space-y-3 text-xs text-charcoal">
+          <textarea id="json-export-text" rows="10" readonly class="w-full p-2.5 font-mono text-[10px] bg-stone-50 border border-stone-200 rounded-xl leading-tight focus:outline-none focus:border-sage"></textarea>
+        </div>
+        <div class="p-4 bg-stone-50 border-t border-stone-200 flex space-x-2">
+          <button onclick="closeModal('modal-json-export')" class="flex-1 py-2.5 bg-stone-200 text-charcoal text-xs font-medium rounded-xl">關閉</button>
+          <button onclick="copyJsonTextarea()" class="flex-1 py-2.5 bg-sage hover:bg-sage-dark text-white text-xs font-bold rounded-xl shadow-2xs">一鍵複製全文</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 新版 BOTTOM NAV BAR (網格強制 5 等份等距) -->
     <nav class="flex-shrink-0 z-40 bg-white border-t border-stone-200 px-1 py-1.5 pb-[max(env(safe-area-inset-bottom),12px)] grid grid-cols-5 gap-1 shadow-[0_-4px_25px_rgba(0,0,0,0.03)] w-full">
       <button onclick="switchView('home')" id="nav-btn-home" class="nav-btn relative flex flex-col items-center justify-center h-12 text-sage-dark transition-colors duration-300">
@@ -693,12 +698,7 @@
         <span class="text-[10px] font-bold relative z-10 mt-0.5 tracking-tight">憑證</span>
       </button>
     </nav>
-
-
-
   </div>
-
-
 
   <script>
     // ==========================================
@@ -709,12 +709,12 @@
     let SHEET_API_URL = (storedUrl && !storedUrl.includes("AKfycbxdXS48")) ? storedUrl : DEFAULT_DEPLOYED_URL;
     localStorage.setItem("tokyo_sheet_api_url", SHEET_API_URL);
 
-    const STORAGE_KEY = "tokyo_trip_2026_data_v34";
-    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v34";
-    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v34";
-    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v34";
-    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v34";
-    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v34";
+    const STORAGE_KEY = "tokyo_trip_2026_data_v36";
+    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v36";
+    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v36";
+    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v36";
+    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v36";
+    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v36";
 
     let tripDays = [];
     let checklistData = [];
@@ -739,7 +739,6 @@
       { name: "3C", color: "#546E7A" }, { name: "小物", color: "#B39DDB" }, { name: "其他", color: "#9E9E9E" }
     ];
 
-    // 整合後的 2026 最新行李清單
     const defaultPackingList = [
       { id: "pk-doc-1", cat: "docs", name: "護照、護照影本、行程手冊", done: false },
       { id: "pk-doc-2", cat: "docs", name: "身分證、健保卡、素食卡", done: false },
@@ -768,9 +767,9 @@
       { id: "pk-chk-9", cat: "checked", name: "防水鞋子、拖鞋", done: false },
       { id: "pk-chk-10", cat: "checked", name: "日常藥、骨科藥、痠痛貼布、暖暖包、蚊咬藥膏、OK繃、護腰帶", done: false },
       { id: "pk-chk-11", cat: "checked", name: "真空袋、髒衣袋、購物袋、保溫袋", done: false },
-      { id: "pk-chk-12", cat: "checked", name: "免洗筷、吸管、水果刀、小剪刀 (必託運)", done: false },
+      { id: "pk-chk-12", cat: "checked", name: "小剪刀 (必託運)", done: false },
       { id: "pk-chk-13", cat: "checked", name: "筆、簽字筆、姓名貼、空白貼、膠帶、過海關透明袋", done: false },
-      { id: "pk-chk-14", cat: "checked", name: "行李秤(含電池)、行李牌、綁繩、鎖頭", done: false },
+      { id: "pk-chk-14", cat: "checked", name: "行李秤(含電池)、行李牌、綁繩、鎖頭", done: false }
     ];
 
     const defaultChecklist = [
@@ -995,21 +994,30 @@
       }
     }
 
+    // 智慧加載邏輯：若有新加的預設項目，會自動融合進現有紀錄中
     function loadLocalData() {
       try { const s = localStorage.getItem(STORAGE_KEY); tripDays = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultTripDays)); if(!Array.isArray(tripDays)||tripDays.length===0) tripDays = JSON.parse(JSON.stringify(defaultTripDays)); } catch(e) { tripDays = JSON.parse(JSON.stringify(defaultTripDays)); }
+      
       try {
-        const s = localStorage.getItem(STORAGE_CHECKLIST_KEY); let loaded = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultChecklist));
+        const s = localStorage.getItem(STORAGE_CHECKLIST_KEY); 
+        let loaded = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultChecklist));
         if(!Array.isArray(loaded)||loaded.length===0) loaded = JSON.parse(JSON.stringify(defaultChecklist));
         const localMap = new Map(loaded.map(i => [i.id, i]));
         defaultChecklist.forEach(defItem => { if (!localMap.has(defItem.id)) loaded.push(JSON.parse(JSON.stringify(defItem))); });
         checklistData = loaded;
       } catch(e) { checklistData = JSON.parse(JSON.stringify(defaultChecklist)); }
+      
       try { const s = localStorage.getItem(STORAGE_NOTES_KEY); dailyNotes = s ? JSON.parse(s) : {}; } catch(e) { dailyNotes = {}; }
       try { const s = localStorage.getItem(STORAGE_EXPENSES_KEY); expensesData = s ? JSON.parse(s) : []; } catch(e) { expensesData = []; }
       try { const s = localStorage.getItem(STORAGE_SETTINGS_KEY); budgetSettings = s ? JSON.parse(s) : { exchangeRate: 0.215 }; } catch(e) { budgetSettings = { exchangeRate: 0.215 }; }
+      
       try { 
-        const s = localStorage.getItem(STORAGE_PACKING_KEY); packingListData = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultPackingList)); 
-        if(!Array.isArray(packingListData)||packingListData.length===0) packingListData = JSON.parse(JSON.stringify(defaultPackingList)); 
+        const s = localStorage.getItem(STORAGE_PACKING_KEY); 
+        let loaded = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultPackingList)); 
+        if(!Array.isArray(loaded)||loaded.length===0) loaded = JSON.parse(JSON.stringify(defaultPackingList)); 
+        const localMap = new Map(loaded.map(i => [i.id, i]));
+        defaultPackingList.forEach(defItem => { if (!localMap.has(defItem.id)) loaded.push(JSON.parse(JSON.stringify(defItem))); });
+        packingListData = loaded;
       } catch(e) { packingListData = JSON.parse(JSON.stringify(defaultPackingList)); }
     }
 
@@ -1038,75 +1046,66 @@
     }
 
     // ==========================================
-    // 🎨 完美原生觸控下拉更新 (Pull-to-Refresh)
+    // 🎨 完美全域懸浮觸控下拉更新 (選項 A 風格)
     // ==========================================
     function initPullToRefresh() {
-      const wrapper = document.getElementById("home-pull-wrapper");
-      const list = document.getElementById("home-day-list");
-      const spinner = document.getElementById("ptr-spinner");
-      const indicator = document.getElementById("ptr-indicator");
+      const ptr = document.getElementById("global-ptr");
+      const spinner = document.getElementById("global-ptr-spinner");
+      let startY = 0, currentY = 0, isPulling = false, isRefreshing = false, activeScrollEl = null;
 
-      let startY = 0;
-      let currentY = 0;
-      let isPulling = false;
-      let isRefreshing = false;
+      const scrollContainers = document.querySelectorAll(".ptr-container");
+      
+      scrollContainers.forEach(el => {
+        el.addEventListener('touchstart', (e) => {
+          if (el.scrollTop <= 0 && !isRefreshing) {
+            startY = e.touches[0].clientY;
+            isPulling = true;
+            activeScrollEl = el;
+          }
+        }, { passive: true });
 
-      list.addEventListener('touchstart', (e) => {
-        if (list.scrollTop <= 0 && !isRefreshing) {
-          startY = e.touches[0].clientY;
-          isPulling = true;
-        }
-      }, { passive: true });
+        el.addEventListener('touchmove', (e) => {
+          if (!isPulling || isRefreshing || activeScrollEl !== el) return;
+          const dy = e.touches[0].clientY - startY;
+          if (dy > 0 && el.scrollTop <= 0) {
+            if (e.cancelable) e.preventDefault();
+            currentY = dy * 0.4; // 阻尼
+            if (currentY > 60) currentY = 60 + (currentY - 60) * 0.2;
+            gsap.set(ptr, { y: currentY });
+            gsap.set(spinner, { rotation: currentY * 5 });
+          } else if (dy < 0) {
+            isPulling = false;
+          }
+        }, { passive: false });
 
-      list.addEventListener('touchmove', (e) => {
-        if (!isPulling || isRefreshing) return;
-        const dy = e.touches[0].clientY - startY;
-        
-        if (dy > 0 && list.scrollTop <= 0) {
-          if (e.cancelable) e.preventDefault(); // 阻止系統橡皮筋效果
-          currentY = dy * 0.45; // 阻尼
-          if (currentY > 75) currentY = 75 + (currentY - 75) * 0.2;
+        el.addEventListener('touchend', () => {
+          if (!isPulling || isRefreshing || activeScrollEl !== el) return;
+          isPulling = false;
           
-          gsap.set(wrapper, { y: currentY, borderRadius: currentY > 0 ? "0 0 20px 20px" : "0" });
-          gsap.set(indicator, { opacity: currentY / 60 });
-          gsap.set(spinner, { rotation: currentY * 5 });
-        } else if (dy < 0) {
-          isPulling = false; // 往上滑動時放開控制權
-        }
-      }, { passive: false });
-
-      list.addEventListener('touchend', () => {
-        if (!isPulling || isRefreshing) return;
-        isPulling = false;
-        
-        if (currentY > 60) {
-          isRefreshing = true;
-          gsap.to(wrapper, { y: 60, borderRadius: "0 0 20px 20px", duration: 0.3, ease: "power2.out" });
-          gsap.to(spinner, { rotation: "+=1080", duration: 1.2, repeat: -1, ease: "linear" });
-          
-          backgroundSyncFromCloud().then(() => {
-            setTimeout(() => {
-              gsap.to(wrapper, {
-                y: 0, borderRadius: 0, duration: 0.4, ease: "back.out(1.2)",
-                onComplete: () => {
-                  isRefreshing = false; currentY = 0;
-                  gsap.killTweensOf(spinner); gsap.set(indicator, { opacity: 0 });
-                  const firstCard = list.querySelector('.bg-cardBg');
-                  if(firstCard) gsap.fromTo(firstCard, { backgroundColor: "#EBF1EB" }, { backgroundColor: "#FFFFFF", duration: 0.8 });
-                }
-              });
-            }, 600); 
-          });
-        } else {
-          gsap.to(wrapper, { y: 0, borderRadius: 0, duration: 0.3, ease: "power2.out" });
-          gsap.to(indicator, { opacity: 0, duration: 0.3 });
-          currentY = 0;
-        }
+          if (currentY > 50) {
+            isRefreshing = true;
+            gsap.to(ptr, { y: 55, duration: 0.3, ease: "power2.out" });
+            gsap.to(spinner, { rotation: "+=1080", duration: 1.2, repeat: -1, ease: "linear" });
+            
+            backgroundSyncFromCloud().then(() => {
+              setTimeout(() => {
+                gsap.to(ptr, {
+                  y: 0, duration: 0.4, ease: "back.in(1.2)",
+                  onComplete: () => { isRefreshing = false; currentY = 0; gsap.killTweensOf(spinner); }
+                });
+              }, 600);
+            });
+          } else {
+            gsap.to(ptr, { y: 0, duration: 0.3, ease: "power2.out" });
+            currentY = 0;
+          }
+          activeScrollEl = null;
+        });
       });
     }
 
     // ==========================================
-    // 🧳 行李與憑證清單模組 (已還原整張卡片反綠色設定)
+    // 🧳 行李與憑證清單模組 
     // ==========================================
     function renderPackingView() {
       const cCarry = document.getElementById("packing-list-carryon");
@@ -1207,35 +1206,16 @@
     function addCustomChecklistItem() {
       const titleInput = document.getElementById("input-new-check-title");
       const descInput = document.getElementById("input-new-check-desc");
-      
       const title = titleInput.value.trim();
       const desc = descInput ? descInput.value.trim() : "";
       
-      if (!title) {
-        showToast("請輸入憑證或待辦標題", "⚠️");
-        return;
-      }
+      if (!title) { showToast("請輸入憑證或待辦標題", "⚠️"); return; }
       
-      checklistData.push({ 
-        id: `chk-${Date.now()}`, 
-        title: title, 
-        badge: "自訂提醒", 
-        time: "隨時", 
-        desc: desc, 
-        alert: "", 
-        done: false 
-      });
+      checklistData.push({ id: `chk-${Date.now()}`, title: title, badge: "自訂提醒", time: "隨時", desc: desc, alert: "", done: false });
+      titleInput.value = ""; if (descInput) descInput.value = "";
       
-      titleInput.value = "";
-      if (descInput) descInput.value = "";
-      
-      renderChecklist(); 
-      scheduleAutoSync(); 
-      showToast("已加入清單！", "✨");
+      renderChecklist(); scheduleAutoSync(); showToast("已加入清單！", "✨");
     }
-
-
-
     function updateChecklistSummary() {
       const doneCount = checklistData.filter(i => i.done).length;
       const el = document.getElementById("home-ticket-summary");
@@ -1249,7 +1229,6 @@
       const panel = document.getElementById(panelId);
       const isOpening = panel.classList.contains('hidden');
 
-      // 關閉其他已開啟的下拉
       document.querySelectorAll('.dropdown-panel:not(.hidden)').forEach(p => {
         p.classList.remove('scale-y-100', 'opacity-100');
         p.classList.add('scale-y-0', 'opacity-0');
@@ -1259,7 +1238,7 @@
 
       if (isOpening) {
         panel.classList.remove('hidden');
-        void panel.offsetWidth; // 觸發重繪
+        void panel.offsetWidth; 
         panel.classList.remove('scale-y-0', 'opacity-0');
         panel.classList.add('scale-y-100', 'opacity-100');
         btnEl.querySelector('.dropdown-arrow').classList.add('rotate-180');
@@ -1283,7 +1262,6 @@
       setTimeout(() => panel.classList.add('hidden'), 300);
     }
 
-    // 點擊外部關閉選單
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.dropdown-panel') && !e.target.closest('.dropdown-btn')) {
         document.querySelectorAll('.dropdown-panel:not(.hidden)').forEach(p => {
@@ -1295,7 +1273,6 @@
     });
 
     function initDynamicDropdowns() {
-      // 動態生成記帳日期選單項目
       const dayPanel = document.getElementById("panel-day");
       if (dayPanel) {
         dayPanel.innerHTML = `<button type="button" class="dropdown-item text-left px-3 py-1.5 text-[11px] hover:bg-sage-light transition-all opacity-0 translate-y-[-10px]" style="transition-delay: 0.05s" onclick="selectDropdown('day', 0, '行前支出 (機票/住宿)')">行前支出 (機票/住宿)</button>`;
@@ -1347,23 +1324,15 @@
         </div>
       `;
 
-      // 套用 GSAP 時間軸延伸動畫 (非排序模式才播放)
       if (!isSortMode) {
-        gsap.fromTo(".timeline-line", 
-          { scaleY: 0 }, 
-          { scaleY: 1, duration: 2.4, ease: "power2.inOut" }
-        );
-        gsap.fromTo(".spot-item",
-          { x: -10, opacity: 0 },
-          { x: 0, opacity: 1, stagger: 0.15, duration: 0.5, ease: "power2.out" }
-        );
+        gsap.fromTo(".timeline-line", { scaleY: 0 }, { scaleY: 1, duration: 2.4, ease: "power2.inOut" });
+        gsap.fromTo(".spot-item", { x: -10, opacity: 0 }, { x: 0, opacity: 1, stagger: 0.15, duration: 0.5, ease: "power2.out" });
       }
 
       if (sortableInstance) sortableInstance.destroy();
       sortableInstance = new Sortable(c.firstElementChild, {
         handle: '.drag-handle', animation: 180, disabled: !isSortMode, ghostClass: 'sortable-ghost',
         onEnd: (e) => {
-          // 排除背景線條的索引干擾
           let oldI = e.oldIndex - 1; let newI = e.newIndex - 1;
           if (oldI !== newI && oldI >= 0 && newI >= 0) {
             const arr = tripDays[dayIdx].spots;
@@ -1373,9 +1342,7 @@
         }
       });
 
-      if (isSortMode) {
-        document.querySelectorAll(".drag-handle").forEach(h => h.classList.remove("opacity-20", "pointer-events-none"));
-      }
+      if (isSortMode) document.querySelectorAll(".drag-handle").forEach(h => h.classList.remove("opacity-20", "pointer-events-none"));
     }
 
     function toggleSortMode() {
@@ -1395,9 +1362,7 @@
       
       if (sortableInstance) sortableInstance.option("disabled", !isSortMode);
       document.querySelectorAll(".drag-handle").forEach(h => {
-        h.classList.toggle("opacity-20", !isSortMode);
-        h.classList.toggle("opacity-100", isSortMode);
-        h.classList.toggle("pointer-events-none", !isSortMode);
+        h.classList.toggle("opacity-20", !isSortMode); h.classList.toggle("opacity-100", isSortMode); h.classList.toggle("pointer-events-none", !isSortMode);
       });
       showToast(isSortMode ? "可按住左側圖示拖曳" : "排序已鎖定儲存", isSortMode ? "🔀" : "🔒");
     }
@@ -1610,7 +1575,7 @@
     function updateExpenseSummaries() { renderExpenseView(); if (document.getElementById("view-day") && !document.getElementById("view-day").classList.contains("hidden")) renderDayExpenseList(currentDayIndex); }
 
     // ==========================================
-    // 📱 導航與視圖切換 (帶膠囊背景特效)
+    // 📱 導航與視圖切換
     // ==========================================
     const ALL_MODAL_IDS = ["modal-tickets", "modal-fuji", "modal-spot-edit", "modal-backup", "modal-json-export"];
     function openModal(modalId) { document.getElementById(modalId).classList.remove("hidden"); history.pushState({ modal: modalId, view: getCurrentActiveView(), dayIdx: currentDayIndex }, ""); }
@@ -1641,7 +1606,6 @@
         if (el) el.classList.toggle("hidden", v !== view);
       });
       
-      // 動態更新導航按鈕的膠囊與顏色 (排除 modal 按鈕)
       views.forEach(key => {
         const nav = document.getElementById("nav-btn-" + key);
         if(nav) {
@@ -1659,9 +1623,6 @@
       else if (v === 'expense') { autoSelectExpenseDay(); renderExpenseView(); if (pushState) history.pushState({ view: 'expense', dayIdx: dayIdx }, ''); } 
       else if (v === 'packing') { renderPackingView(); if (pushState) history.pushState({ view: 'packing' }, ''); }
     }
-
-
-
 
     function renderHomeDayList() {
       const c = document.getElementById("home-day-list"); if (!c) return; c.innerHTML = "";
@@ -1767,6 +1728,35 @@
       tripDays = JSON.parse(JSON.stringify(defaultTripDays)); checklistData = JSON.parse(JSON.stringify(defaultChecklist));
       dailyNotes = {}; expensesData = []; budgetSettings = { exchangeRate: 0.215 }; packingListData = JSON.parse(JSON.stringify(defaultPackingList));
       scheduleAutoSync(); closeBackupModal(); switchView('home'); renderAllViews(); showToast("已重置所有", "🔄");
+    }
+
+    function openJsonExportModal() {
+      const jsonStr = JSON.stringify({ tripDays, checklistData, dailyNotes, expensesData, budgetSettings, packingListData }, null, 2);
+      const txt = document.getElementById("json-export-text");
+      if (txt) { txt.value = jsonStr; setTimeout(() => { txt.focus(); txt.select(); txt.setSelectionRange(0, 999999); }, 100); }
+      openModal("modal-json-export");
+    }
+
+    async function copyJsonTextarea() {
+      const txt = document.getElementById("json-export-text"); if (!txt) return;
+      txt.focus(); txt.select(); txt.setSelectionRange(0, 999999);
+      let copied = false;
+      if (navigator.clipboard && window.isSecureContext) { try { await navigator.clipboard.writeText(txt.value); copied = true; } catch(e) { copied = false; } }
+      if (!copied) { try { copied = document.execCommand('copy'); } catch(e) { copied = false; } }
+      if (copied) showToast("已成功複製 JSON 代碼！", "📋"); else showToast("請直接長按框內文字複製！", "ℹ️");
+    }
+
+    function downloadOfflineHtml() {
+      try {
+        ALL_MODAL_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add("hidden"); });
+        let html = document.documentElement.outerHTML;
+        html = html.replace(/const defaultChecklist = \[[\s\S]*?\];\s*\/\/\s*={10,}/m, `const defaultChecklist = ${JSON.stringify(checklistData, null, 2)};\n\n    // ==========================================`);
+        html = html.replace(/const defaultTripDays = \[[\s\S]*?\];\s*\/\/\s*={10,}/m, `const defaultTripDays = ${JSON.stringify(tripDays, null, 2)};\n\n    // ==========================================`);
+        html = html.replace(/^<!DOCTYPE [^>]+>\s*/i, ''); const fullHtml = "<!DOCTYPE html>\n" + html;
+        const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `東京八日遊_離線保證版_${new Date().toISOString().slice(0, 10)}.html`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast("已成功下載離線完整版 HTML！", "📥");
+      } catch (err) { showToast("下載失敗：" + err.message, "❌"); }
     }
 
     function showToast(msg, icon="✨") {
