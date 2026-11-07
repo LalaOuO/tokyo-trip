@@ -1045,8 +1045,9 @@
       el.textContent = `${total} 個景點 📍`;
     }
 
+    
     // ==========================================
-    // 🎨 完美全域懸浮觸控下拉更新 (選項 A 風格)
+    // 🎨 完美全域懸浮觸控下拉更新 (加入防呆與中斷保護)
     // ==========================================
     function initPullToRefresh() {
       const ptr = document.getElementById("global-ptr");
@@ -1078,7 +1079,8 @@
           }
         }, { passive: false });
 
-        el.addEventListener('touchend', () => {
+        // 將結束邏輯獨立，方便同時綁定 touchend 與 touchcancel
+        const handleTouchEnd = () => {
           if (!isPulling || isRefreshing || activeScrollEl !== el) return;
           isPulling = false;
           
@@ -1087,7 +1089,8 @@
             gsap.to(ptr, { y: 55, duration: 0.3, ease: "power2.out" });
             gsap.to(spinner, { rotation: "+=1080", duration: 1.2, repeat: -1, ease: "linear" });
             
-            backgroundSyncFromCloud().then(() => {
+            // 使用 finally()，保證無論雲端同步成功還是失敗，圈圈都絕對會收回去
+            backgroundSyncFromCloud().finally(() => {
               setTimeout(() => {
                 gsap.to(ptr, {
                   y: 0, duration: 0.4, ease: "back.in(1.2)",
@@ -1096,13 +1099,19 @@
               }, 600);
             });
           } else {
+            // 拉的距離不夠，直接收回
             gsap.to(ptr, { y: 0, duration: 0.3, ease: "power2.out" });
             currentY = 0;
           }
           activeScrollEl = null;
-        });
+        };
+
+        el.addEventListener('touchend', handleTouchEnd);
+        el.addEventListener('touchcancel', handleTouchEnd); // 加入這行：防禦系統強制中斷手勢
       });
     }
+
+
 
     // ==========================================
     // 🧳 行李與憑證清單模組 
