@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="referrer" content="no-referrer">
   <title>東京八日遊 (11/10~11/17)</title>
+
+  <!-- PWA Web App Manifest 支援 (解鎖安裝按鈕的核心) -->
+  <link rel="manifest" href="./manifest.json">
   
   <!-- iOS PWA / Web App 桌面化支援 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="東京八日遊">
-  <link rel="apple-touch-icon" id="apple-touch-icon" href="">
+  <link rel="apple-touch-icon" href="./icon.png">
 
   <!-- Android / Chrome PWA 支援 -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="東京八日遊">
   <meta name="theme-color" content="#7B8C7E">
-  <link rel="icon" id="app-favicon" type="image/png" href="">
+  <link rel="icon" type="image/png" href="./icon.png">
 
   <!-- Tailwind CSS CDN -->
+
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- SortableJS CDN (Smooth Mobile Touch & Drag & Drop) -->
