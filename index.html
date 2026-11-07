@@ -31,8 +31,10 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <!-- GSAP Core -->
+  <!-- GSAP Core & Plugins -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +64,7 @@
   </script>
 
   <style>
-    /* 強制禁止系統原生下拉橡皮筋效果，確保全域下拉更新完美運作 */
+    /* 強制禁止系統原生下拉橡皮筋效果，確保手刻下拉更新正常運作 */
     html, body {
       background-color: #F7F5F0;
       color: #2D3238;
@@ -92,6 +94,7 @@
 </head>
 <body class="font-sans antialiased text-charcoal overflow-hidden">
 
+  <!-- 鎖定 100dvh App-Shell -->
   <div id="app" class="max-w-md mx-auto h-[100dvh] h-screen flex flex-col bg-linen bg-grid relative shadow-2xl overflow-hidden">
     
     <!-- Toast -->
@@ -100,7 +103,7 @@
       <span id="toast-msg">已儲存變更</span>
     </div>
 
-   <!-- 全域懸浮圓餅 下拉更新指示器 (選項A 風格 - 終極防卡死版) -->
+    <!-- 全域懸浮圓餅 下拉更新指示器 (終極防卡死版) -->
     <div id="global-ptr" class="fixed left-0 right-0 z-[70] flex justify-center pointer-events-none opacity-0" style="top: -100px;">
       <div class="pt-[max(env(safe-area-inset-top),16px)] mt-2">
         <div class="bg-white rounded-full shadow-lg p-2 flex items-center justify-center border border-stone-200">
@@ -711,12 +714,12 @@
     let SHEET_API_URL = (storedUrl && !storedUrl.includes("AKfycbxdXS48")) ? storedUrl : DEFAULT_DEPLOYED_URL;
     localStorage.setItem("tokyo_sheet_api_url", SHEET_API_URL);
 
-    const STORAGE_KEY = "tokyo_trip_2026_data_v36";
-    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v36";
-    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v36";
-    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v36";
-    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v36";
-    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v36";
+    const STORAGE_KEY = "tokyo_trip_2026_data_v37";
+    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v37";
+    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v37";
+    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v37";
+    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v37";
+    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v37";
 
     let tripDays = [];
     let checklistData = [];
@@ -996,7 +999,6 @@
       }
     }
 
-    // 智慧加載邏輯：若有新加的預設項目，會自動融合進現有紀錄中
     function loadLocalData() {
       try { const s = localStorage.getItem(STORAGE_KEY); tripDays = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultTripDays)); if(!Array.isArray(tripDays)||tripDays.length===0) tripDays = JSON.parse(JSON.stringify(defaultTripDays)); } catch(e) { tripDays = JSON.parse(JSON.stringify(defaultTripDays)); }
       
@@ -1047,9 +1049,8 @@
       el.textContent = `${total} 個景點 📍`;
     }
 
-    
     // ==========================================
-    // 🎨 完美全域懸浮觸控下拉更新 (終極防卡死版)
+    // 🎨 完美全域懸浮觸控下拉更新 (選項 A 風格)
     // ==========================================
     function initPullToRefresh() {
       const ptr = document.getElementById("global-ptr");
@@ -1070,16 +1071,14 @@
 
         el.addEventListener('touchmove', (e) => {
           if (!isPulling || isRefreshing || activeScrollEl !== el) return;
-          
           const dy = e.touches[0].clientY - startY;
           
           if (dy > 0 && el.scrollTop <= 0) {
-            if (e.cancelable) e.preventDefault(); // 鎖定原生畫面捲動
+            if (e.cancelable) e.preventDefault();
             
-            currentY = dy * 0.5; // 計算下拉距離
+            currentY = dy * 0.5;
             if (currentY > 160) currentY = 160 + (currentY - 160) * 0.2;
             
-            // 下拉時漸漸浮現並往下移動 (因為起點是 top: -100px)
             gsap.set(ptr, { y: currentY, opacity: currentY / 100 });
             gsap.set(spinner, { rotation: currentY * 5 });
           } else if (dy <= 0) {
@@ -1095,16 +1094,13 @@
           
           if (isRefreshing) return;
           
-          // 如果拉超過 120px，觸發更新
           if (currentY > 120) {
             isRefreshing = true;
-            // 讓圓餅彈至畫面上方適當位置旋轉
             gsap.to(ptr, { y: 140, opacity: 1, duration: 0.3, ease: "power2.out" });
             gsap.to(spinner, { rotation: "+=1080", duration: 1.2, repeat: -1, ease: "linear" });
             
             backgroundSyncFromCloud().finally(() => {
               setTimeout(() => {
-                // 更新完成，徹底縮回畫面外 (y: 0, 也就是回到 top: -100px)
                 gsap.to(ptr, {
                   y: 0, opacity: 0, duration: 0.4, ease: "power2.in",
                   onComplete: () => { 
@@ -1116,7 +1112,6 @@
               }, 600);
             });
           } else {
-            // 拉不夠遠，直接縮回天上
             gsap.to(ptr, { y: 0, opacity: 0, duration: 0.3, ease: "power2.out" });
             currentY = 0;
           }
@@ -1126,7 +1121,6 @@
         el.addEventListener('touchcancel', handleTouchEnd);
       });
 
-      // 🛡️ 終極防護網：手指滑到螢幕外邊界放開
       window.addEventListener('touchend', () => {
         if (isPulling && !isRefreshing) {
           isPulling = false;
@@ -1136,24 +1130,6 @@
         }
       });
     }
-
-        // 綁定所有可能結束手勢的事件
-        el.addEventListener('touchend', handleTouchEnd);
-        el.addEventListener('touchcancel', handleTouchEnd);
-      });
-
-      // 🛡️ 【終極防護網】: 避免手指滑到瀏覽器網址列或螢幕外放開，導致元件漏接事件
-      window.addEventListener('touchend', () => {
-        if (isPulling && !isRefreshing) {
-          isPulling = false;
-          activeScrollEl = null;
-          gsap.to(ptr, { y: 0, duration: 0.3, ease: "power2.out" });
-          currentY = 0;
-        }
-      });
-    }
-
-
 
     // ==========================================
     // 🧳 行李與憑證清單模組 
@@ -1325,11 +1301,13 @@
 
     function initDynamicDropdowns() {
       const dayPanel = document.getElementById("panel-day");
-      if (dayPanel) {
+      if (dayPanel && tripDays && Array.isArray(tripDays)) {
         dayPanel.innerHTML = `<button type="button" class="dropdown-item text-left px-3 py-1.5 text-[11px] hover:bg-sage-light transition-all opacity-0 translate-y-[-10px]" style="transition-delay: 0.05s" onclick="selectDropdown('day', 0, '行前支出 (機票/住宿)')">行前支出 (機票/住宿)</button>`;
         tripDays.forEach((d, i) => {
-          const delay = 0.05 * (i + 2);
-          dayPanel.innerHTML += `<button type="button" class="dropdown-item text-left px-3 py-1.5 text-[11px] hover:bg-sage-light transition-all opacity-0 translate-y-[-10px]" style="transition-delay: ${delay}s" onclick="selectDropdown('day', ${d.day}, 'Day ${d.day} (${d.date.slice(5)})')">Day ${d.day} (${d.date.slice(5)})</button>`;
+          if (d && d.date) {
+            const delay = 0.05 * (i + 2);
+            dayPanel.innerHTML += `<button type="button" class="dropdown-item text-left px-3 py-1.5 text-[11px] hover:bg-sage-light transition-all opacity-0 translate-y-[-10px]" style="transition-delay: ${delay}s" onclick="selectDropdown('day', ${d.day}, 'Day ${d.day} (${d.date.slice(5)})')">Day ${d.day} (${d.date.slice(5)})</button>`;
+          }
         });
       }
     }
@@ -1657,7 +1635,8 @@
         if (el) el.classList.toggle("hidden", v !== view);
       });
       
-      views.forEach(key => {
+      const navKeys = ['home','day','expense','packing','ticket'];
+      navKeys.forEach(key => {
         const nav = document.getElementById("nav-btn-" + key);
         if(nav) {
           const isActive = (v === key);
@@ -1680,6 +1659,7 @@
       tripDays.forEach((item, idx) => {
         const posY = item.imgPosY !== undefined ? item.imgPosY : 50; const stepNum = parseInt(String(item.steps).replace(/[^0-9]/g, '')) || 0;
         const stepBadgeClass = stepNum >= 15000 ? "bg-amber-100/90 text-amber-900 border border-amber-300/80" : "bg-emerald-100/80 text-emerald-900 border border-emerald-300/80";
+        const spotsStr = (item.spots && Array.isArray(item.spots)) ? item.spots.map(s => s.name).join(' ➔ ') : '';
         c.innerHTML += `
           <div class="bg-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-2xs hover:shadow-md cursor-pointer flex space-x-3.5 items-center" onclick="switchView('day', ${idx})">
             <div class="w-16 h-16 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 relative">
@@ -1692,7 +1672,7 @@
                 <span class="text-[10px] font-medium px-2 py-0.5 rounded-full ${stepBadgeClass}">👣 ${item.steps}</span>
               </div>
               <h3 class="text-xs font-bold text-charcoal truncate">${item.title}</h3>
-              <p class="text-[11px] text-muted truncate mt-0.5">${item.spots.map(s=>s.name).join(' ➔ ')}</p>
+              <p class="text-[11px] text-muted truncate mt-0.5">${spotsStr}</p>
             </div>
           </div>`;
       });
@@ -1718,7 +1698,6 @@
       document.getElementById("detail-daily-note").value = dailyNotes[`d${idx}`] || "";
     }
 
-    // 景點彈窗與用餐候選
     function openEditSpotModal(idx) {
       editingSpotIndex = idx; const s = tripDays[currentDayIndex].spots[idx];
       document.getElementById("spot-modal-title").textContent = "編輯行程資訊"; document.getElementById("edit-spot-time").value = s.time || "";
@@ -1766,7 +1745,6 @@
     function debounceSaveDailyNote() { dailyNotes[`d${currentDayIndex}`] = document.getElementById("detail-daily-note").value; scheduleAutoSync(); }
     function resetCurrentDay() { tripDays[currentDayIndex] = JSON.parse(JSON.stringify(defaultTripDays[currentDayIndex])); scheduleAutoSync(); loadDayDetail(currentDayIndex); showToast("已還原本日", "↩️"); }
 
-    // 設定管理模組
     function openTicketModal() { renderChecklist(); openModal("modal-tickets"); }
     function closeTicketModal() { closeModal("modal-tickets"); }
     function openFujiNoteModal() { openModal("modal-fuji"); }
