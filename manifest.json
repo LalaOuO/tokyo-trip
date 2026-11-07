@@ -1,10 +1,10 @@
 {
   "name": "東京八日遊",
-  "short_name": "東京行",
+  "short_name": "Tokyo26",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#F7F5F0",
-  "theme_color": "#7B8C7E",
+  "theme_color": "#F7F5F0",
   "orientation": "portrait",
   "icons": [
     {
