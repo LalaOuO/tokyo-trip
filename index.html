@@ -117,7 +117,7 @@
     </div>
 
     <!-- ==========================================
-         1. HOME VIEW (首頁：橫向生存指南 + 每日行程一覽)
+         1. HOME VIEW (首頁：滿版幻燈新聞 + 每日行程一覽)
          ========================================== -->
     <main id="view-home" class="flex-1 flex flex-col overflow-hidden relative">
       <div class="flex-shrink-0 pt-[max(env(safe-area-inset-top),16px)] pb-2 bg-gradient-to-b from-stone-200/50 to-linen border-b border-stone-200/60 z-10 shadow-2xs relative">
@@ -136,85 +136,26 @@
           </div>
         </div>
 
-        <div class="px-5">
-          <h1 class="text-xl font-serif font-bold tracking-tight text-charcoal mb-0.5">東京八日遊 (11/10~11/17)</h1>
-          <p class="text-[10px] text-muted leading-tight">富士紅葉・昭和銀杏，澀谷潮流，經典體驗</p>
+        <!-- 主標題與右上角幻燈片進度點 (移除冗贅文字，保持極簡) -->
+        <div class="px-5 flex items-end justify-between">
+          <div>
+            <h1 class="text-xl font-serif font-bold tracking-tight text-charcoal mb-0.5">東京八日遊 (11/10~11/17)</h1>
+            <p class="text-[10px] text-muted leading-tight">富士紅葉・昭和銀杏，澀谷潮流，經典體驗</p>
+          </div>
+          <div class="flex space-x-1 pb-1" id="guide-dots">
+            <span class="w-4 h-1.5 rounded-full bg-sage transition-all duration-300"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300"></span>
+          </div>
         </div>
 
-        <!-- 橫向捲動 (Horizontal Scroll) 三大重點攻略卡 -->
+        <!-- 滿版幻燈新聞 (Hero Carousel)：穿搭 ➔ 富士山 ➔ 退稅 -->
         <div class="mt-2.5">
-          <div class="px-5 flex items-center justify-between mb-1">
-            <span class="text-[10px] font-bold text-charcoal tracking-wide flex items-center space-x-1">
-              <span>✨</span><span>重點生存指南 (左右滑動點選展開)</span>
-            </span>
-            <div class="flex space-x-1" id="guide-dots">
-              <span class="w-3.5 h-1 rounded-full bg-sage transition-all duration-300"></span>
-              <span class="w-1.5 h-1 rounded-full bg-stone-300 transition-all duration-300"></span>
-              <span class="w-1.5 h-1 rounded-full bg-stone-300 transition-all duration-300"></span>
-            </div>
-          </div>
-
-          <div id="guide-carousel" onscroll="updateCarouselDots(this)" class="flex overflow-x-auto no-scrollbar snap-x-mandatory space-x-2.5 px-5 py-1">
-            
-            <!-- (A) 退稅新制與領現 -->
-            <div onclick="openGuideModal('modal-guide-tax', this)" class="snap-item flex-shrink-0 w-[82%] bg-cardBg/95 rounded-2xl p-3 border border-stone-200/90 shadow-2xs cursor-pointer active:scale-98 transition relative overflow-hidden group">
-              <div class="absolute -right-3 -bottom-3 w-16 h-16 bg-terracotta-light rounded-full opacity-60 pointer-events-none"></div>
-              <div class="flex items-start justify-between relative z-10">
-                <div class="flex items-center space-x-2">
-                  <span class="w-7 h-7 rounded-xl bg-terracotta-light text-terracotta-dark flex items-center justify-center text-sm font-bold shadow-2xs">🏧</span>
-                  <div>
-                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-terracotta-light text-terracotta-dark">2026/11 新制</span>
-                    <h3 class="text-xs font-bold text-charcoal mt-0.5">日本機場退稅與 D8 避雷</h3>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold text-terracotta-dark bg-terracotta-light/60 px-2 py-0.5 rounded-full">展開 ➔</span>
-              </div>
-              <p class="text-[10px] text-muted mt-2 leading-relaxed relative z-10 line-clamp-2">
-                先付含稅價、無密封袋！<strong class="text-rose-700">D8 成田二航切記「先過 KIOSK 綠燈」再託運液體</strong>，VJW 專用 WiFi 與領現機台位置一覽。
-              </p>
-            </div>
-
-            <!-- (B) 富士山交通與接駁 -->
-            <div onclick="openGuideModal('modal-guide-fuji', this)" class="snap-item flex-shrink-0 w-[82%] bg-cardBg/95 rounded-2xl p-3 border border-stone-200/90 shadow-2xs cursor-pointer active:scale-98 transition relative overflow-hidden group">
-              <div class="absolute -right-3 -bottom-3 w-16 h-16 bg-dustyBlue-light rounded-full opacity-60 pointer-events-none"></div>
-              <div class="flex items-start justify-between relative z-10">
-                <div class="flex items-center space-x-2">
-                  <span class="w-7 h-7 rounded-xl bg-dustyBlue-light text-dustyBlue-dark flex items-center justify-center text-sm font-bold shadow-2xs">🗻</span>
-                  <div>
-                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-dustyBlue-light text-dustyBlue-dark">D3 ~ D4 必看</span>
-                    <h3 class="text-xs font-bold text-charcoal mt-0.5">富士山交通與飯店接駁攻略</h3>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold text-dustyBlue-dark bg-dustyBlue-light/60 px-2 py-0.5 rounded-full">展開 ➔</span>
-              </div>
-              <p class="text-[10px] text-muted mt-2 leading-relaxed relative z-10 line-clamp-2">
-                富士回遊 7號/36號車次座位、新世紀飯店免費接駁專車叫車方式、周遊紅線巴士（13號站牌 ➔ 9號纜車站）全攻略。
-              </p>
-            </div>
-
-            <!-- (C) OOTD 穿搭與注意事項 -->
-            <div onclick="openGuideModal('modal-guide-ootd', this)" class="snap-item flex-shrink-0 w-[82%] bg-cardBg/95 rounded-2xl p-3 border border-stone-200/90 shadow-2xs cursor-pointer active:scale-98 transition relative overflow-hidden group">
-              <div class="absolute -right-3 -bottom-3 w-16 h-16 bg-sage-light rounded-full opacity-60 pointer-events-none"></div>
-              <div class="flex items-start justify-between relative z-10">
-                <div class="flex items-center space-x-2">
-                  <span class="w-7 h-7 rounded-xl bg-sage-light text-sage-dark flex items-center justify-center text-sm font-bold shadow-2xs">👗</span>
-                  <div>
-                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-sage-light text-sage-dark">OOTD & 氣溫</span>
-                    <h3 class="text-xs font-bold text-charcoal mt-0.5">重點穿搭與每日注意事項</h3>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold text-sage-dark bg-sage-light/60 px-2 py-0.5 rounded-full">展開 ➔</span>
-              </div>
-              <p class="text-[10px] text-muted mt-2 leading-relaxed relative z-10 line-clamp-2">
-                HOKA 戰靴＋羊毛襪！<strong class="text-charcoal">D4 白熊洋裝</strong>、<strong class="text-charcoal">D5 哈利波特高領洋裝</strong>、<strong class="text-rose-700">D6 teamLab 嚴禁穿洋裝</strong>！
-              </p>
-            </div>
-
-          </div>
+          <div id="guide-carousel" onscroll="updateCarouselDots(this)" class="flex overflow-x-auto no-scrollbar snap-x-mandatory space-x-3 px-5"></div>
         </div>
 
         <!-- 緊急提醒小黃框 -->
-        <div class="px-5 mt-1.5">
+        <div class="px-5 mt-2">
           <div class="p-2 rounded-xl bg-amber-50/90 border border-amber-200/80 shadow-2xs flex items-center justify-between">
             <div class="flex items-center space-x-1.5 min-w-0 pr-2">
               <span class="text-amber-800 text-xs flex-shrink-0">🔔</span>
@@ -544,10 +485,208 @@
     </main>
 
     <!-- ==========================================
-         MODALS: 首頁三大生存指南展開視窗 (A / B / C)
+         MODALS: 首頁三大生存指南展開視窗 + 圖片裁切器
          ========================================== -->
 
-    <!-- MODAL (A): 2026 退稅新制與機場領現攻略 -->
+    <!-- MODAL: 首頁幻燈片圖片上傳與縮放擷取器 (⚙️ 齒輪觸發) -->
+    <div id="modal-guide-img-edit" class="fixed inset-0 z-[75] bg-black/70 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
+        <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">🖼️</span>
+            <div>
+              <h3 id="guide-crop-title" class="text-sm font-bold text-charcoal">自訂主題背景照片</h3>
+              <p class="text-[10px] text-muted">相簿選圖並調整位置，自動壓縮永久內嵌不破圖</p>
+            </div>
+          </div>
+          <button onclick="closeModal('modal-guide-img-edit')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="p-5 overflow-y-auto space-y-4 text-xs text-charcoal">
+          <!-- 即時 1:1 比例預覽窗 -->
+          <div>
+            <span class="text-[10px] font-bold text-muted block mb-1.5">即時預覽 (與首頁實際卡片比例相同)</span>
+            <div class="relative h-[120px] w-full rounded-2xl overflow-hidden shadow-inner border border-stone-300 bg-stone-800">
+              <img id="crop-preview-img" src="" referrerpolicy="no-referrer" class="w-full h-full object-cover origin-center transition-none">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between text-white pointer-events-none">
+                <div>
+                  <span id="crop-preview-badge" class="inline-block text-[9px] font-bold px-2 py-0.5 rounded bg-white/25 backdrop-blur-md text-white mb-1">標籤</span>
+                  <h3 id="crop-preview-heading" class="text-sm font-serif font-bold tracking-wide drop-shadow">標題預覽</h3>
+                </div>
+                <span class="text-[10px] bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full font-medium">展開 ➔</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 相簿上傳按鈕 -->
+          <div class="flex space-x-2">
+            <label class="flex-1 py-2.5 px-3 bg-sage hover:bg-sage-dark text-white rounded-xl font-bold text-center cursor-pointer shadow-2xs transition active:scale-98 flex items-center justify-center space-x-1.5">
+              <span>📷</span><span>從手機相簿選擇照片</span>
+              <input type="file" id="guide-file-input" accept="image/*" class="hidden" onchange="handleGuideFileSelect(event)">
+            </label>
+          </div>
+
+          <!-- 縮放與位置調整滑桿 -->
+          <div class="p-3.5 bg-white rounded-2xl border border-stone-200 space-y-3 shadow-2xs">
+            <div>
+              <div class="flex justify-between text-[11px] font-bold mb-1">
+                <span>🔍 縮放大小 (Zoom)</span>
+                <span id="lbl-crop-scale" class="font-mono text-sage-dark">100%</span>
+              </div>
+              <input type="range" id="slider-crop-scale" min="1" max="2.5" step="0.05" value="1" oninput="updateCropPreviewTransform()" class="w-full accent-sage">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[11px] font-bold mb-1">
+                <span>↕️ 上下位置 (Y 軸焦點)</span>
+                <span id="lbl-crop-y" class="font-mono text-sage-dark">50%</span>
+              </div>
+              <input type="range" id="slider-crop-y" min="0" max="100" step="1" value="50" oninput="updateCropPreviewTransform()" class="w-full accent-sage">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[11px] font-bold mb-1">
+                <span>↔️ 左右位置 (X 軸焦點)</span>
+                <span id="lbl-crop-x" class="font-mono text-sage-dark">50%</span>
+              </div>
+              <input type="range" id="slider-crop-x" min="0" max="100" step="1" value="50" oninput="updateCropPreviewTransform()" class="w-full accent-sage">
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-stone-100/80 border-t border-stone-200 flex space-x-2">
+          <button onclick="closeModal('modal-guide-img-edit')" class="flex-1 py-2.5 bg-stone-200 text-charcoal text-xs font-medium rounded-xl">取消</button>
+          <button onclick="saveGuideImageCrop()" class="flex-1 py-2.5 bg-sage hover:bg-sage-dark text-white text-xs font-bold rounded-xl shadow-sm transition active:scale-98">儲存並烙印圖片</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL (1): OOTD 穿搭與氣溫注意事項 -->
+    <div id="modal-guide-ootd" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
+        <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">👗</span>
+            <div>
+              <h3 class="text-sm font-bold text-charcoal">OOTD 重點穿搭與氣溫對策</h3>
+              <p class="text-[10px] text-muted">專屬洋裝排程・teamLab 避雷・HOKA 戰靴</p>
+            </div>
+          </div>
+          <button onclick="closeGuideModal('modal-guide-ootd')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="p-5 overflow-y-auto space-y-3.5 text-xs text-charcoal">
+          <!-- 三大指定穿搭 -->
+          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2.5">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-terracotta-light text-terracotta-dark">重點指定 OOTD 排程</span>
+            
+            <div class="p-2.5 rounded-xl bg-linen/70 border border-stone-200/80 flex items-start space-x-2.5">
+              <span class="text-base mt-0.5">🐻‍❄️</span>
+              <div>
+                <span class="text-[10px] font-bold text-sage-dark">Day 4 (11/13 週五)・富士山第二天</span>
+                <h4 class="text-xs font-bold text-charcoal">必穿：白熊洋裝</h4>
+                <p class="text-[11px] text-muted mt-0.5 leading-relaxed">清晨拍產屋崎逆富士、早上搭天上山公園纜車，白熊洋裝搭配雪白富士山頂與湖景超級出片！清晨僅 3~5°C，務必內搭保暖並套上厚外套與羊毛襪。</p>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-linen/70 border border-stone-200/80 flex items-start space-x-2.5">
+              <span class="text-base mt-0.5">🪄</span>
+              <div>
+                <span class="text-[10px] font-bold text-terracotta-dark">Day 5 (11/14 週六)・哈利波特影城 & 丸之內</span>
+                <h4 class="text-xs font-bold text-charcoal">必穿：高領洋裝</h4>
+                <p class="text-[11px] text-muted mt-0.5 leading-relaxed">完美契合霍格華茲英倫魔法學院氛圍，傍晚前往銀座與丸之內仲通拍聖誕樹點燈也充滿秋冬高級感。</p>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-rose-50 border border-rose-200/90 flex items-start space-x-2.5">
+              <span class="text-base mt-0.5">🚫</span>
+              <div>
+                <span class="text-[10px] font-bold text-rose-700">Day 6 (11/15 週日)・淺草 & teamLab Borderless</span>
+                <h4 class="text-xs font-bold text-rose-950">絕對不可以穿洋裝！（須著褲裝）</h4>
+                <p class="text-[11px] text-rose-900 mt-0.5 leading-relaxed">麻布台之丘 teamLab 內部有<strong>大面積全鏡面地板</strong>與高低起伏的立體互動區，穿裙子或洋裝會嚴重反射曝光！當天請務必穿長褲或褲裝。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 鞋襪與氣溫預估 -->
+          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sage-light text-sage-dark">11月中旬氣溫預估 & 戰靴配置</span>
+            <div class="space-y-1.5 text-[11px] text-muted leading-relaxed">
+              <p>👟 <strong class="text-charcoal">全行程神級戰靴：HOKA 運動鞋 ＋ 羊毛襪</strong><br>應付每日 1.3 萬～1.8 萬步的緩震救星！去河口湖（D3~D4）換上高磅數羊毛襪鎖住足部溫度。</p>
+              <p>🌡️ <strong class="text-charcoal">東京市區（10°C ～ 18°C）：</strong><br>早晚偏涼、室內與地鐵車廂暖氣強，建議「洋蔥式穿法」（發熱衣＋洋裝/上衣＋防風保暖外套）。</p>
+              <p>❄️ <strong class="text-charcoal">河口湖山區（3°C ～ 13°C）：</strong><br>早晚溫差極大，清晨湖畔看日出體感接近 0°C，圍巾、手套、暖暖包請隨身攜帶。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 bg-stone-100/80 border-t border-stone-200 text-center">
+          <button onclick="closeGuideModal('modal-guide-ootd')" class="w-full py-2.5 bg-sage text-white text-xs font-medium rounded-xl shadow-sm">關閉穿搭提醒</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL (2): 富士山交通與接駁攻略 -->
+    <div id="modal-guide-fuji" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
+        <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="text-base">🗻</span>
+            <div>
+              <h3 class="text-sm font-bold text-charcoal">富士山河口湖 交通與接駁全攻略</h3>
+              <p class="text-[10px] text-muted">特急富士回遊・飯店接駁車・周遊巴士紅線</p>
+            </div>
+          </div>
+          <button onclick="closeGuideModal('modal-guide-fuji')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="p-5 overflow-y-auto space-y-3.5 text-xs text-charcoal">
+          <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 shadow-2xs space-y-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-200/80 text-amber-900">JR 特急富士回遊 (已訂妥・首日領實體票)</span>
+            <div class="space-y-1.5 text-[11px] text-amber-950">
+              <div class="p-2 bg-white/80 rounded-xl border border-amber-200/60">
+                <strong class="block text-charcoal">🚆 去程：富士回遊 7號 (11/12 D3)</strong>
+                <span>08:30 新宿出發 ➔ 10:12 抵達下吉田</span><br>
+                <span class="font-mono text-terracotta-dark font-bold">座位：1號車 1番C席、1番D席</span>
+              </div>
+              <div class="p-2 bg-white/80 rounded-xl border border-amber-200/60">
+                <strong class="block text-charcoal">🚆 回程：富士回遊 36號 (11/13 D4)</strong>
+                <span>14:58 河口湖出發 ➔ 16:59 抵達新宿</span><br>
+                <span class="font-mono text-terracotta-dark font-bold">座位：3號車 1番A席、1番B席</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-1.5">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-dustyBlue-light text-dustyBlue-dark">飯店免費接駁指引</span>
+            <h4 class="text-xs font-bold text-charcoal">富士河口湖溫泉 新世紀飯店</h4>
+            <p class="text-[11px] text-muted leading-relaxed">
+              D3 下午抵達河口湖站拍完羅森便利店後，走進車站內的<strong>「觀光案內所（旅客服務中心）」</strong>，請櫃檯人員協助致電新世紀飯店派免費接駁車來車站接送（接駁時間 14:30～18:00）。
+            </p>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-1.5">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sage-light text-sage-dark">周遊巴士紅線 (Red Line)</span>
+            <h4 class="text-xs font-bold text-charcoal">飯店往返天上山公園纜車站 (D4 早上)</h4>
+            <p class="text-[11px] text-muted leading-relaxed">
+              新世紀飯店門口出來旁邊即是 <strong>13 號站牌（淺川溫泉街）</strong>。搭乘往河口湖站方向的紅線巴士，坐 3～4 站即達 <strong>9 號站牌「遊覽船・索道入口」</strong>，車程僅約 5～7 分鐘。天上山纜車往返門票已於 Klook 預訂完成！
+            </p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-stone-100/80 border-t border-stone-200 text-center">
+          <button onclick="closeGuideModal('modal-guide-fuji')" class="w-full py-2.5 bg-sage text-white text-xs font-medium rounded-xl shadow-sm">關閉富士山攻略</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL (3): 2026 退稅新制與機場領現攻略 -->
     <div id="modal-guide-tax" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
         <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
@@ -638,128 +777,6 @@
       </div>
     </div>
 
-    <!-- MODAL (B): 富士山交通與接駁攻略 -->
-    <div id="modal-guide-fuji" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
-        <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span class="text-base">🗻</span>
-            <div>
-              <h3 class="text-sm font-bold text-charcoal">富士山河口湖 交通與接駁全攻略</h3>
-              <p class="text-[10px] text-muted">特急富士回遊・飯店接駁車・周遊巴士紅線</p>
-            </div>
-          </div>
-          <button onclick="closeGuideModal('modal-guide-fuji')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-
-        <div class="p-5 overflow-y-auto space-y-3.5 text-xs text-charcoal">
-          <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 shadow-2xs space-y-2">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-200/80 text-amber-900">JR 特急富士回遊 (已訂妥・首日領實體票)</span>
-            <div class="space-y-1.5 text-[11px] text-amber-950">
-              <div class="p-2 bg-white/80 rounded-xl border border-amber-200/60">
-                <strong class="block text-charcoal">🚆 去程：富士回遊 7號 (11/12 D3)</strong>
-                <span>08:30 新宿出發 ➔ 10:12 抵達下吉田</span><br>
-                <span class="font-mono text-terracotta-dark font-bold">座位：1號車 1番C席、1番D席</span>
-              </div>
-              <div class="p-2 bg-white/80 rounded-xl border border-amber-200/60">
-                <strong class="block text-charcoal">🚆 回程：富士回遊 36號 (11/13 D4)</strong>
-                <span>14:58 河口湖出發 ➔ 16:59 抵達新宿</span><br>
-                <span class="font-mono text-terracotta-dark font-bold">座位：3號車 1番A席、1番B席</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-1.5">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-dustyBlue-light text-dustyBlue-dark">飯店免費接駁指引</span>
-            <h4 class="text-xs font-bold text-charcoal">富士河口湖溫泉 新世紀飯店</h4>
-            <p class="text-[11px] text-muted leading-relaxed">
-              D3 下午抵達河口湖站拍完羅森便利店後，走進車站內的<strong>「觀光案內所（旅客服務中心）」</strong>，請櫃檯人員協助致電新世紀飯店派免費接駁車來車站接送（接駁時間 14:30～18:00）。
-            </p>
-          </div>
-
-          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-1.5">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sage-light text-sage-dark">周遊巴士紅線 (Red Line)</span>
-            <h4 class="text-xs font-bold text-charcoal">飯店往返天上山公園纜車站 (D4 早上)</h4>
-            <p class="text-[11px] text-muted leading-relaxed">
-              新世紀飯店門口出來旁邊即是 <strong>13 號站牌（淺川溫泉街）</strong>。搭乘往河口湖站方向的紅線巴士，坐 3～4 站即達 <strong>9 號站牌「遊覽船・索道入口」</strong>，車程僅約 5～7 分鐘。天上山纜車往返門票已於 Klook 預訂完成！
-            </p>
-          </div>
-        </div>
-
-        <div class="p-4 bg-stone-100/80 border-t border-stone-200 text-center">
-          <button onclick="closeGuideModal('modal-guide-fuji')" class="w-full py-2.5 bg-sage text-white text-xs font-medium rounded-xl shadow-sm">關閉富士山攻略</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL (C): OOTD 穿搭與氣溫注意事項 -->
-    <div id="modal-guide-ootd" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[88vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
-        <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span class="text-base">👗</span>
-            <div>
-              <h3 class="text-sm font-bold text-charcoal">OOTD 重點穿搭與氣溫對策</h3>
-              <p class="text-[10px] text-muted">專屬洋裝排程・teamLab 避雷・HOKA 戰靴</p>
-            </div>
-          </div>
-          <button onclick="closeGuideModal('modal-guide-ootd')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-
-        <div class="p-5 overflow-y-auto space-y-3.5 text-xs text-charcoal">
-          <!-- 三大指定穿搭 -->
-          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2.5">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-terracotta-light text-terracotta-dark">重點指定 OOTD 排程</span>
-            
-            <div class="p-2.5 rounded-xl bg-linen/70 border border-stone-200/80 flex items-start space-x-2.5">
-              <span class="text-base mt-0.5">🐻‍❄️</span>
-              <div>
-                <span class="text-[10px] font-bold text-sage-dark">Day 4 (11/13 週五)・富士山第二天</span>
-                <h4 class="text-xs font-bold text-charcoal">必穿：白熊洋裝</h4>
-                <p class="text-[11px] text-muted mt-0.5 leading-relaxed">清晨拍產屋崎逆富士、早上搭天上山公園纜車，白熊洋裝搭配雪白富士山頂與湖景超級出片！清晨僅 3~5°C，務必內搭保暖並套上厚外套與羊毛襪。</p>
-              </div>
-            </div>
-
-            <div class="p-2.5 rounded-xl bg-linen/70 border border-stone-200/80 flex items-start space-x-2.5">
-              <span class="text-base mt-0.5">🪄</span>
-              <div>
-                <span class="text-[10px] font-bold text-terracotta-dark">Day 5 (11/14 週六)・哈利波特影城 & 丸之內</span>
-                <h4 class="text-xs font-bold text-charcoal">必穿：高領洋裝</h4>
-                <p class="text-[11px] text-muted mt-0.5 leading-relaxed">完美契合霍格華茲英倫魔法學院氛圍，傍晚前往銀座與丸之內仲通拍聖誕樹點燈也充滿秋冬高級感。</p>
-              </div>
-            </div>
-
-            <div class="p-2.5 rounded-xl bg-rose-50 border border-rose-200/90 flex items-start space-x-2.5">
-              <span class="text-base mt-0.5">🚫</span>
-              <div>
-                <span class="text-[10px] font-bold text-rose-700">Day 6 (11/15 週日)・淺草 & teamLab Borderless</span>
-                <h4 class="text-xs font-bold text-rose-950">絕對不可以穿洋裝！（須著褲裝）</h4>
-                <p class="text-[11px] text-rose-900 mt-0.5 leading-relaxed">麻布台之丘 teamLab 內部有<strong>大面積全鏡面地板</strong>與高低起伏的立體互動區，穿裙子或洋裝會嚴重反射曝光！當天請務必穿長褲或褲裝。</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- 鞋襪與氣溫預估 -->
-          <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sage-light text-sage-dark">11月中旬氣溫預估 & 戰靴配置</span>
-            <div class="space-y-1.5 text-[11px] text-muted leading-relaxed">
-              <p>👟 <strong class="text-charcoal">全行程神級戰靴：HOKA 運動鞋 ＋ 羊毛襪</strong><br>應付每日 1.3 萬～1.8 萬步的緩震救星！去河口湖（D3~D4）換上高磅數羊毛襪鎖住足部溫度。</p>
-              <p>🌡️ <strong class="text-charcoal">東京市區（10°C ～ 18°C）：</strong><br>早晚偏涼、室內與地鐵車廂暖氣強，建議「洋蔥式穿法」（發熱衣＋洋裝/上衣＋防風保暖外套）。</p>
-              <p>❄️ <strong class="text-charcoal">河口湖山區（3°C ～ 13°C）：</strong><br>早晚溫差極大，清晨湖畔看日出體感接近 0°C，圍巾、手套、暖暖包請隨身攜帶。</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="p-4 bg-stone-100/80 border-t border-stone-200 text-center">
-          <button onclick="closeGuideModal('modal-guide-ootd')" class="w-full py-2.5 bg-sage text-white text-xs font-medium rounded-xl shadow-sm">關閉穿搭提醒</button>
-        </div>
-      </div>
-    </div>
-
     <!-- MODAL: SPOT EDIT -->
     <div id="modal-spot-edit" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
@@ -837,6 +854,15 @@
         </div>
         <div class="p-5 overflow-y-auto space-y-4 text-xs text-charcoal">
           
+          <!-- 一鍵隱藏首頁圖片編輯齒輪開關 -->
+          <div class="p-3.5 bg-white rounded-2xl border border-stone-200 shadow-2xs flex items-center justify-between">
+            <div>
+              <span class="font-bold text-charcoal text-xs block">🔒 隱藏首頁幻燈片編輯齒輪</span>
+              <span class="text-[10px] text-muted">照片上傳調整完畢後開啟，保持畫面純淨</span>
+            </div>
+            <input type="checkbox" id="toggle-hide-guide-gear" onchange="toggleGuideGearVisibility()" class="w-5 h-5 accent-sage rounded cursor-pointer">
+          </div>
+
           <div class="p-3.5 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
             <span class="font-bold text-charcoal text-xs block">🔗 Google 試算表同步網址 (Apps Script Web App)</span>
             <input type="text" id="config-api-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full p-2 border border-stone-200 rounded-xl text-[11px] font-mono focus:border-sage focus:outline-none bg-stone-50">
@@ -954,19 +980,21 @@
     let SHEET_API_URL = (storedUrl && !storedUrl.includes("AKfycbxdXS48")) ? storedUrl : DEFAULT_DEPLOYED_URL;
     localStorage.setItem("tokyo_sheet_api_url", SHEET_API_URL);
 
-    const STORAGE_KEY = "tokyo_trip_2026_data_v38";
-    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v38";
-    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v38";
-    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v38";
-    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v38";
-    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v38";
+    const STORAGE_KEY = "tokyo_trip_2026_data_v39";
+    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v39";
+    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v39";
+    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v39";
+    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v39";
+    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v39";
+    const STORAGE_GUIDES_KEY = "tokyo_trip_2026_guides_v39";
 
     let tripDays = [];
     let checklistData = [];
     let dailyNotes = {};
     let expensesData = [];
-    let budgetSettings = { exchangeRate: 0.215 };
+    let budgetSettings = { exchangeRate: 0.215, hideGuideGear: false };
     let packingListData = [];
+    let guideCardsData = [];
     
     let currentDayIndex = 0;
     let sortableInstance = null;
@@ -977,6 +1005,40 @@
     let currentChartType = 'doughnut'; 
     let currentSelectedCategory = "食物";
     let currentSelectedCurrency = "JPY";
+
+    // 首頁三大滿版幻燈新聞預設值 (順序：穿搭 ➔ 富士山 ➔ 退稅)
+    const defaultGuideCards = [
+      {
+        id: "ootd",
+        badge: "👗 OOTD & 氣溫",
+        title: "重點穿搭與每日注意事項",
+        modalId: "modal-guide-ootd",
+        img: "https://lovetogo.tw/202401-tokyo/harry-potter/photo/20240204-1224-7557.jpg",
+        posX: 50,
+        posY: 25,
+        scale: 1
+      },
+      {
+        id: "fuji",
+        badge: "🗻 D3 ~ D4 必看",
+        title: "富士山交通與飯店接駁攻略",
+        modalId: "modal-guide-fuji",
+        img: "https://tw.canon/media/image/2019/01/31/0f47e0f2f52342a4be3d8e97ad529738_01.jpg",
+        posX: 50,
+        posY: 15,
+        scale: 1
+      },
+      {
+        id: "tax",
+        badge: "🏧 2026/11 新制",
+        title: "日本機場退稅與 D8 避雷",
+        modalId: "modal-guide-tax",
+        img: "https://static.gltjp.com/glt/data/article/21000/20300/20230426_120439_fd9c889e_w1920.webp",
+        posX: 50,
+        posY: 65,
+        scale: 1
+      }
+    ];
 
     const EXPENSE_CATEGORIES = [
       { name: "機票", color: "#6B7E91" }, { name: "住宿", color: "#7B8C7E" }, { name: "交通", color: "#A2B29F" },
@@ -1192,7 +1254,7 @@
     async function saveToCloud() {
       if (!isApiConfigured()) { saveLocalData(); return; }
       setSyncStatus("同步中...", "syncing");
-      const payload = { tripDays, checklistData, dailyNotes, expensesData, budgetSettings, packingListData, lastUpdated: new Date().toISOString() };
+      const payload = { tripDays, checklistData, dailyNotes, expensesData, budgetSettings, packingListData, guideCardsData, lastUpdated: new Date().toISOString() };
       try {
         const response = await fetch(SHEET_API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
         const result = await response.json();
@@ -1216,14 +1278,15 @@
       try {
         const response = await fetch(SHEET_API_URL, { method: "GET", cache: "no-cache" });
         const data = await response.json();
-        if (data && (data.tripDays || data.checklistData || data.expensesData || data.packingListData)) {
+        if (data && (data.tripDays || data.checklistData || data.expensesData || data.packingListData || data.guideCardsData)) {
           let hasDiff = false;
           if (Array.isArray(data.tripDays) && JSON.stringify(data.tripDays) !== JSON.stringify(tripDays)) { tripDays = data.tripDays; hasDiff = true; }
           if (Array.isArray(data.checklistData) && JSON.stringify(data.checklistData) !== JSON.stringify(checklistData)) { checklistData = data.checklistData; hasDiff = true; }
           if (Array.isArray(data.packingListData) && JSON.stringify(data.packingListData) !== JSON.stringify(packingListData)) { packingListData = data.packingListData; hasDiff = true; }
+          if (Array.isArray(data.guideCardsData) && JSON.stringify(data.guideCardsData) !== JSON.stringify(guideCardsData)) { guideCardsData = data.guideCardsData; hasDiff = true; }
           if (data.dailyNotes && JSON.stringify(data.dailyNotes) !== JSON.stringify(dailyNotes)) { dailyNotes = data.dailyNotes; hasDiff = true; }
           if (Array.isArray(data.expensesData) && JSON.stringify(data.expensesData) !== JSON.stringify(expensesData)) { expensesData = data.expensesData; hasDiff = true; }
-          if (data.budgetSettings && data.budgetSettings.exchangeRate) budgetSettings = data.budgetSettings;
+          if (data.budgetSettings) { budgetSettings = { ...budgetSettings, ...data.budgetSettings }; }
           if (hasDiff) {
             saveLocalData();
             renderAllViews();
@@ -1253,7 +1316,7 @@
       
       try { const s = localStorage.getItem(STORAGE_NOTES_KEY); dailyNotes = s ? JSON.parse(s) : {}; } catch(e) { dailyNotes = {}; }
       try { const s = localStorage.getItem(STORAGE_EXPENSES_KEY); expensesData = s ? JSON.parse(s) : []; } catch(e) { expensesData = []; }
-      try { const s = localStorage.getItem(STORAGE_SETTINGS_KEY); budgetSettings = s ? JSON.parse(s) : { exchangeRate: 0.215 }; } catch(e) { budgetSettings = { exchangeRate: 0.215 }; }
+      try { const s = localStorage.getItem(STORAGE_SETTINGS_KEY); budgetSettings = s ? { exchangeRate: 0.215, hideGuideGear: false, ...JSON.parse(s) } : { exchangeRate: 0.215, hideGuideGear: false }; } catch(e) { budgetSettings = { exchangeRate: 0.215, hideGuideGear: false }; }
       
       try { 
         const s = localStorage.getItem(STORAGE_PACKING_KEY); 
@@ -1263,6 +1326,13 @@
         defaultPackingList.forEach(defItem => { if (!localMap.has(defItem.id)) loaded.push(JSON.parse(JSON.stringify(defItem))); });
         packingListData = loaded;
       } catch(e) { packingListData = JSON.parse(JSON.stringify(defaultPackingList)); }
+
+      try {
+        const s = localStorage.getItem(STORAGE_GUIDES_KEY);
+        let loaded = s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultGuideCards));
+        if (!Array.isArray(loaded) || loaded.length !== 3) loaded = JSON.parse(JSON.stringify(defaultGuideCards));
+        guideCardsData = loaded;
+      } catch(e) { guideCardsData = JSON.parse(JSON.stringify(defaultGuideCards)); }
     }
 
     function saveLocalData() {
@@ -1272,32 +1342,174 @@
       localStorage.setItem(STORAGE_EXPENSES_KEY, JSON.stringify(expensesData));
       localStorage.setItem(STORAGE_SETTINGS_KEY, JSON.stringify(budgetSettings));
       localStorage.setItem(STORAGE_PACKING_KEY, JSON.stringify(packingListData));
+      localStorage.setItem(STORAGE_GUIDES_KEY, JSON.stringify(guideCardsData));
       updateChecklistSummary(); updateExpenseSummaries(); updatePackingProgress();
     }
 
     function renderAllViews() {
-      renderCategoryChips(); renderChecklist(); renderHomeDayList(); renderDayPills();
+      renderGuideCarousel(); renderCategoryChips(); renderChecklist(); renderHomeDayList(); renderDayPills();
       updateChecklistSummary(); renderExpenseView(); renderPackingView();
       if (document.getElementById("view-day") && !document.getElementById("view-day").classList.contains("hidden")) loadDayDetail(currentDayIndex);
     }
 
-    // 首頁橫向捲動指示點更新
+    // ==========================================
+    // 🖼️ 首頁滿版幻燈新聞 & 圖片上傳縮放擷取器
+    // ==========================================
+    let editingGuideIdx = null;
+    let tempUploadedBase64 = null;
+
+    function renderGuideCarousel() {
+      const container = document.getElementById("guide-carousel");
+      if (!container) return;
+      container.innerHTML = "";
+      const hideGear = !!budgetSettings.hideGuideGear;
+
+      guideCardsData.forEach((card, idx) => {
+        const posX = card.posX !== undefined ? card.posX : 50;
+        const posY = card.posY !== undefined ? card.posY : 50;
+        const scale = card.scale !== undefined ? card.scale : 1;
+
+        const slide = document.createElement("div");
+        slide.className = "snap-item flex-shrink-0 w-full relative h-[118px] rounded-2xl overflow-hidden shadow-sm border border-stone-200/90 cursor-pointer group select-none bg-stone-800";
+        slide.onclick = () => openGuideModal(card.modalId, slide);
+
+        slide.innerHTML = `
+          <img src="${card.img}" referrerpolicy="no-referrer" class="w-full h-full object-cover transition-transform duration-300" style="object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 pointer-events-none"></div>
+          
+          ${!hideGear ? `
+          <button type="button" onclick="openGuideImgEditor(event, ${idx})" title="更換與裁切照片" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-black/45 hover:bg-black/70 text-white/90 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-sm active:scale-90 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </button>
+          ` : ''}
+
+          <div class="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between text-white pointer-events-none">
+            <div>
+              <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded bg-white/25 backdrop-blur-md text-white mb-1 tracking-wide">${card.badge}</span>
+              <h3 class="text-sm font-serif font-bold tracking-wide drop-shadow-sm">${card.title}</h3>
+            </div>
+            <span class="text-[10px] bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full font-medium border border-white/20">展開 ➔</span>
+          </div>
+        `;
+        container.appendChild(slide);
+      });
+    }
+
     function updateCarouselDots(el) {
       const scrollLeft = el.scrollLeft;
-      const cardWidth = el.firstElementChild ? el.firstElementChild.offsetWidth : 280;
-      const idx = Math.min(2, Math.max(0, Math.round(scrollLeft / (cardWidth * 0.85))));
+      const width = el.offsetWidth || 320;
+      const idx = Math.min(2, Math.max(0, Math.round(scrollLeft / width)));
       const dots = document.querySelectorAll("#guide-dots span");
       dots.forEach((d, i) => {
         d.className = i === idx
-          ? "w-3.5 h-1 rounded-full bg-sage transition-all duration-300"
-          : "w-1.5 h-1 rounded-full bg-stone-300 transition-all duration-300";
+          ? "w-4 h-1.5 rounded-full bg-sage transition-all duration-300"
+          : "w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300";
       });
+    }
+
+    function openGuideImgEditor(event, idx) {
+      event.stopPropagation();
+      editingGuideIdx = idx;
+      tempUploadedBase64 = null;
+      const card = guideCardsData[idx];
+
+      document.getElementById("guide-crop-title").textContent = `編輯照片：${card.title}`;
+      document.getElementById("crop-preview-badge").textContent = card.badge;
+      document.getElementById("crop-preview-heading").textContent = card.title;
+
+      const previewImg = document.getElementById("crop-preview-img");
+      previewImg.src = card.img;
+
+      document.getElementById("slider-crop-scale").value = card.scale || 1;
+      document.getElementById("slider-crop-y").value = card.posY !== undefined ? card.posY : 50;
+      document.getElementById("slider-crop-x").value = card.posX !== undefined ? card.posX : 50;
+
+      updateCropPreviewTransform();
+      openModal("modal-guide-img-edit");
+    }
+
+    function updateCropPreviewTransform() {
+      const scale = parseFloat(document.getElementById("slider-crop-scale").value) || 1;
+      const posY = parseInt(document.getElementById("slider-crop-y").value);
+      const posX = parseInt(document.getElementById("slider-crop-x").value);
+
+      document.getElementById("lbl-crop-scale").textContent = `${Math.round(scale * 100)}%`;
+      document.getElementById("lbl-crop-y").textContent = `${posY}%`;
+      document.getElementById("lbl-crop-x").textContent = `${posX}%`;
+
+      const previewImg = document.getElementById("crop-preview-img");
+      previewImg.style.objectPosition = `${posX}% ${posY}%`;
+      previewImg.style.transformOrigin = `${posX}% ${posY}%`;
+      previewImg.style.transform = `scale(${scale})`;
+    }
+
+    // 相簿選取圖片後，透過 Canvas 自動壓縮轉為高畫質輕量 Base64 (永不破圖)
+    function handleGuideFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      showToast("正在處理照片...", "⏳");
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 900;
+          let w = img.width;
+          let h = img.height;
+          if (w > MAX_WIDTH) {
+            h = Math.round((h * MAX_WIDTH) / w);
+            w = MAX_WIDTH;
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+
+          // 壓縮為 JPEG 0.82 畫質，兼顧清晰度與雲端同步速度
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          tempUploadedBase64 = dataUrl;
+          document.getElementById("crop-preview-img").src = dataUrl;
+          // 選新照片時自動重置焦點方便調整
+          document.getElementById("slider-crop-scale").value = 1;
+          document.getElementById("slider-crop-y").value = 50;
+          document.getElementById("slider-crop-x").value = 50;
+          updateCropPreviewTransform();
+          showToast("已載入照片，請調整位置！", "✨");
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveGuideImageCrop() {
+      if (editingGuideIdx === null) return;
+      const card = guideCardsData[editingGuideIdx];
+      if (tempUploadedBase64) {
+        card.img = tempUploadedBase64;
+      }
+      card.scale = parseFloat(document.getElementById("slider-crop-scale").value) || 1;
+      card.posY = parseInt(document.getElementById("slider-crop-y").value);
+      card.posX = parseInt(document.getElementById("slider-crop-x").value);
+
+      scheduleAutoSync();
+      renderGuideCarousel();
+      closeModal("modal-guide-img-edit");
+      showToast("背景照片已儲存並永久內嵌！", "✅");
+    }
+
+    function toggleGuideGearVisibility() {
+      const checked = document.getElementById("toggle-hide-guide-gear").checked;
+      budgetSettings.hideGuideGear = checked;
+      scheduleAutoSync();
+      renderGuideCarousel();
+      showToast(checked ? "已隱藏首頁圖片編輯齒輪" : "已顯示首頁圖片編輯齒輪", "⚙️");
     }
 
     // GSAP 卡片展開與收合動畫
     function openGuideModal(modalId, cardEl) {
       if (cardEl) {
-        gsap.fromTo(cardEl, { scale: 0.96 }, { scale: 1, duration: 0.25, ease: "back.out(2)" });
+        gsap.fromTo(cardEl, { scale: 0.97 }, { scale: 1, duration: 0.25, ease: "back.out(2)" });
       }
       const modal = document.getElementById(modalId);
       if (!modal) return;
@@ -1884,7 +2096,7 @@
     // ==========================================
     // 📱 導航與視圖切換 (5 大獨立主畫面)
     // ==========================================
-    const ALL_MODAL_IDS = ["modal-guide-tax", "modal-guide-fuji", "modal-guide-ootd", "modal-spot-edit", "modal-backup", "modal-json-export"];
+    const ALL_MODAL_IDS = ["modal-guide-tax", "modal-guide-fuji", "modal-guide-ootd", "modal-guide-img-edit", "modal-spot-edit", "modal-backup", "modal-json-export"];
     function openModal(modalId) { document.getElementById(modalId).classList.remove("hidden"); history.pushState({ modal: modalId, view: getCurrentActiveView(), dayIdx: currentDayIndex }, ""); }
     function closeModal(modalId) { const el = document.getElementById(modalId); if (el && !el.classList.contains("hidden")) el.classList.add("hidden"); }
     function getOpenModalId() { for (const id of ALL_MODAL_IDS) { const el = document.getElementById(id); if (el && !el.classList.contains("hidden")) return id; } return null; }
@@ -1898,7 +2110,7 @@
     function navigateBack() {
       const openId = getOpenModalId();
       if (openId) {
-        if (openId.startsWith("modal-guide-")) closeGuideModal(openId);
+        if (openId.startsWith("modal-guide-") && openId !== "modal-guide-img-edit") closeGuideModal(openId);
         else closeModal(openId);
         return;
       }
@@ -1932,7 +2144,7 @@
         }
       });
       
-      if (v === 'home') { renderHomeDayList(); if (pushState) history.pushState({ view: 'home' }, ''); } 
+      if (v === 'home') { renderGuideCarousel(); renderHomeDayList(); if (pushState) history.pushState({ view: 'home' }, ''); } 
       else if (v === 'day') { loadDayDetail(dayIdx); if (pushState) history.pushState({ view: 'day', dayIdx: dayIdx }, ''); } 
       else if (v === 'expense') { autoSelectExpenseDay(); renderExpenseView(); if (pushState) history.pushState({ view: 'expense', dayIdx: dayIdx }, ''); } 
       else if (v === 'packing') { renderPackingView(); if (pushState) history.pushState({ view: 'packing' }, ''); }
@@ -2030,18 +2242,25 @@
     function debounceSaveDailyNote() { dailyNotes[`d${currentDayIndex}`] = document.getElementById("detail-daily-note").value; scheduleAutoSync(); }
     function resetCurrentDay() { tripDays[currentDayIndex] = JSON.parse(JSON.stringify(defaultTripDays[currentDayIndex])); scheduleAutoSync(); loadDayDetail(currentDayIndex); showToast("已還原本日", "↩️"); }
 
-    function openBackupModal() { document.getElementById("config-api-url").value = SHEET_API_URL; openModal("modal-backup"); }
+    function openBackupModal() {
+      document.getElementById("config-api-url").value = SHEET_API_URL;
+      const gearToggle = document.getElementById("toggle-hide-guide-gear");
+      if (gearToggle) gearToggle.checked = !!budgetSettings.hideGuideGear;
+      openModal("modal-backup");
+    }
     function closeBackupModal() { closeModal("modal-backup"); }
     function saveApiUrlConfig() { const url = document.getElementById("config-api-url").value.trim(); if (!url) return showToast("請填入有效網址", "⚠️"); SHEET_API_URL = url; localStorage.setItem("tokyo_sheet_api_url", url); closeBackupModal(); showToast("網址已更新，正在測試連線...", "⚙️"); backgroundSyncFromCloud(); }
     
     function resetToDefaultData() {
       tripDays = JSON.parse(JSON.stringify(defaultTripDays)); checklistData = JSON.parse(JSON.stringify(defaultChecklist));
-      dailyNotes = {}; expensesData = []; budgetSettings = { exchangeRate: 0.215 }; packingListData = JSON.parse(JSON.stringify(defaultPackingList));
+      dailyNotes = {}; expensesData = []; budgetSettings = { exchangeRate: 0.215, hideGuideGear: false };
+      packingListData = JSON.parse(JSON.stringify(defaultPackingList));
+      guideCardsData = JSON.parse(JSON.stringify(defaultGuideCards));
       scheduleAutoSync(); closeBackupModal(); switchView('home'); renderAllViews(); showToast("已重置所有", "🔄");
     }
 
     function openJsonExportModal() {
-      const jsonStr = JSON.stringify({ tripDays, checklistData, dailyNotes, expensesData, budgetSettings, packingListData }, null, 2);
+      const jsonStr = JSON.stringify({ tripDays, checklistData, dailyNotes, expensesData, budgetSettings, packingListData, guideCardsData }, null, 2);
       const txt = document.getElementById("json-export-text");
       if (txt) { txt.value = jsonStr; setTimeout(() => { txt.focus(); txt.select(); txt.setSelectionRange(0, 999999); }, 100); }
       openModal("modal-json-export");
@@ -2060,7 +2279,8 @@
       try {
         ALL_MODAL_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.classList.add("hidden"); });
         let html = document.documentElement.outerHTML;
-        html = html.replace(/const defaultChecklist = \[[\s\S]*?\];\s*\/\/\s*={10,}/m, `const defaultChecklist = ${JSON.stringify(checklistData, null, 2)};\n\n    // ==========================================`);
+        html = html.replace(/const defaultGuideCards = \[[\s\S]*?\];\s*const EXPENSE_CATEGORIES/m, `const defaultGuideCards = ${JSON.stringify(guideCardsData, null, 2)};\n\n    const EXPENSE_CATEGORIES`);
+        html = html.replace(/const defaultChecklist = \[[\s\S]*?\];\s*const defaultTripDays/m, `const defaultChecklist = ${JSON.stringify(checklistData, null, 2)};\n\n    const defaultTripDays`);
         html = html.replace(/const defaultTripDays = \[[\s\S]*?\];\s*\/\/\s*={10,}/m, `const defaultTripDays = ${JSON.stringify(tripDays, null, 2)};\n\n    // ==========================================`);
         html = html.replace(/^<!DOCTYPE [^>]+>\s*/i, ''); const fullHtml = "<!DOCTYPE html>\n" + html;
         const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
