@@ -136,7 +136,7 @@
           </div>
         </div>
 
-        <!-- 主標題與右上角幻燈片進度點 (移除冗贅文字，保持極簡) -->
+        <!-- 主標題與右上角幻燈片進度點 -->
         <div class="px-5 flex items-end justify-between">
           <div>
             <h1 class="text-xl font-serif font-bold tracking-tight text-charcoal mb-0.5">東京八日遊 (11/10~11/17)</h1>
@@ -169,7 +169,6 @@
 
         <div class="flex items-center justify-between mt-2 pt-1 px-6">
           <h2 class="text-xs font-serif font-bold tracking-wider text-charcoal">每日行程一覽</h2>
-          <span class="text-[10px] text-muted">下拉可重新整理最新進度</span>
         </div>
       </div>
 
@@ -485,84 +484,8 @@
     </main>
 
     <!-- ==========================================
-         MODALS: 首頁三大生存指南展開視窗 + 圖片裁切器
+         MODALS: 首頁三大生存指南展開視窗
          ========================================== -->
-
-    <!-- MODAL: 首頁幻燈片圖片上傳與縮放擷取器 (⚙️ 齒輪觸發) -->
-    <div id="modal-guide-img-edit" class="fixed inset-0 z-[75] bg-black/70 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-      <div class="modal-box w-full max-w-md bg-linen rounded-t-3xl sm:rounded-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-stone-200">
-        <div class="p-4 bg-cardBg border-b border-stone-200 flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <span class="text-base">🖼️</span>
-            <div>
-              <h3 id="guide-crop-title" class="text-sm font-bold text-charcoal">自訂主題背景照片</h3>
-              <p class="text-[10px] text-muted">相簿選圖並調整位置，自動壓縮永久內嵌不破圖</p>
-            </div>
-          </div>
-          <button onclick="closeModal('modal-guide-img-edit')" class="p-1 rounded-full text-muted hover:text-charcoal bg-stone-100">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-
-        <div class="p-5 overflow-y-auto space-y-4 text-xs text-charcoal">
-          <!-- 即時 1:1 比例預覽窗 -->
-          <div>
-            <span class="text-[10px] font-bold text-muted block mb-1.5">即時預覽 (與首頁實際卡片比例相同)</span>
-            <div class="relative h-[120px] w-full rounded-2xl overflow-hidden shadow-inner border border-stone-300 bg-stone-800">
-              <img id="crop-preview-img" src="" referrerpolicy="no-referrer" class="w-full h-full object-cover origin-center transition-none">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>
-              <div class="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between text-white pointer-events-none">
-                <div>
-                  <span id="crop-preview-badge" class="inline-block text-[9px] font-bold px-2 py-0.5 rounded bg-white/25 backdrop-blur-md text-white mb-1">標籤</span>
-                  <h3 id="crop-preview-heading" class="text-sm font-serif font-bold tracking-wide drop-shadow">標題預覽</h3>
-                </div>
-                <span class="text-[10px] bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full font-medium">展開 ➔</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 相簿上傳按鈕 -->
-          <div class="flex space-x-2">
-            <label class="flex-1 py-2.5 px-3 bg-sage hover:bg-sage-dark text-white rounded-xl font-bold text-center cursor-pointer shadow-2xs transition active:scale-98 flex items-center justify-center space-x-1.5">
-              <span>📷</span><span>從手機相簿選擇照片</span>
-              <input type="file" id="guide-file-input" accept="image/*" class="hidden" onchange="handleGuideFileSelect(event)">
-            </label>
-          </div>
-
-          <!-- 縮放與位置調整滑桿 -->
-          <div class="p-3.5 bg-white rounded-2xl border border-stone-200 space-y-3 shadow-2xs">
-            <div>
-              <div class="flex justify-between text-[11px] font-bold mb-1">
-                <span>🔍 縮放大小 (Zoom)</span>
-                <span id="lbl-crop-scale" class="font-mono text-sage-dark">100%</span>
-              </div>
-              <input type="range" id="slider-crop-scale" min="1" max="2.5" step="0.05" value="1" oninput="updateCropPreviewTransform()" class="w-full accent-sage">
-            </div>
-
-            <div>
-              <div class="flex justify-between text-[11px] font-bold mb-1">
-                <span>↕️ 上下位置 (Y 軸焦點)</span>
-                <span id="lbl-crop-y" class="font-mono text-sage-dark">50%</span>
-              </div>
-              <input type="range" id="slider-crop-y" min="0" max="100" step="1" value="50" oninput="updateCropPreviewTransform()" class="w-full accent-sage">
-            </div>
-
-            <div>
-              <div class="flex justify-between text-[11px] font-bold mb-1">
-                <span>↔️ 左右位置 (X 軸焦點)</span>
-                <span id="lbl-crop-x" class="font-mono text-sage-dark">50%</span>
-              </div>
-              <input type="range" id="slider-crop-x" min="0" max="100" step="1" value="50" oninput="updateCropPreviewTransform()" class="w-full accent-sage">
-            </div>
-          </div>
-        </div>
-
-        <div class="p-4 bg-stone-100/80 border-t border-stone-200 flex space-x-2">
-          <button onclick="closeModal('modal-guide-img-edit')" class="flex-1 py-2.5 bg-stone-200 text-charcoal text-xs font-medium rounded-xl">取消</button>
-          <button onclick="saveGuideImageCrop()" class="flex-1 py-2.5 bg-sage hover:bg-sage-dark text-white text-xs font-bold rounded-xl shadow-sm transition active:scale-98">儲存並烙印圖片</button>
-        </div>
-      </div>
-    </div>
 
     <!-- MODAL (1): OOTD 穿搭與氣溫注意事項 -->
     <div id="modal-guide-ootd" class="fixed inset-0 z-[60] bg-black/60 backdrop-blur-xs hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -853,15 +776,6 @@
           </button>
         </div>
         <div class="p-5 overflow-y-auto space-y-4 text-xs text-charcoal">
-          
-          <!-- 一鍵隱藏首頁圖片編輯齒輪開關 -->
-          <div class="p-3.5 bg-white rounded-2xl border border-stone-200 shadow-2xs flex items-center justify-between">
-            <div>
-              <span class="font-bold text-charcoal text-xs block">🔒 隱藏首頁幻燈片編輯齒輪</span>
-              <span class="text-[10px] text-muted">照片上傳調整完畢後開啟，保持畫面純淨</span>
-            </div>
-            <input type="checkbox" id="toggle-hide-guide-gear" onchange="toggleGuideGearVisibility()" class="w-5 h-5 accent-sage rounded cursor-pointer">
-          </div>
 
           <div class="p-3.5 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
             <span class="font-bold text-charcoal text-xs block">🔗 Google 試算表同步網址 (Apps Script Web App)</span>
@@ -992,7 +906,7 @@
     let checklistData = [];
     let dailyNotes = {};
     let expensesData = [];
-    let budgetSettings = { exchangeRate: 0.215, hideGuideGear: false };
+    let budgetSettings = { exchangeRate: 0.215 };
     let packingListData = [];
     let guideCardsData = [];
     
@@ -1316,7 +1230,7 @@
       
       try { const s = localStorage.getItem(STORAGE_NOTES_KEY); dailyNotes = s ? JSON.parse(s) : {}; } catch(e) { dailyNotes = {}; }
       try { const s = localStorage.getItem(STORAGE_EXPENSES_KEY); expensesData = s ? JSON.parse(s) : []; } catch(e) { expensesData = []; }
-      try { const s = localStorage.getItem(STORAGE_SETTINGS_KEY); budgetSettings = s ? { exchangeRate: 0.215, hideGuideGear: false, ...JSON.parse(s) } : { exchangeRate: 0.215, hideGuideGear: false }; } catch(e) { budgetSettings = { exchangeRate: 0.215, hideGuideGear: false }; }
+      try { const s = localStorage.getItem(STORAGE_SETTINGS_KEY); budgetSettings = s ? { exchangeRate: 0.215, ...JSON.parse(s) } : { exchangeRate: 0.215 }; } catch(e) { budgetSettings = { exchangeRate: 0.215 }; }
       
       try { 
         const s = localStorage.getItem(STORAGE_PACKING_KEY); 
@@ -1353,18 +1267,14 @@
     }
 
     // ==========================================
-    // 🖼️ 首頁滿版幻燈新聞 & 圖片上傳縮放擷取器
+    // 🖼️ 首頁滿版幻燈新聞 (無齒輪、無展開字樣純淨版)
     // ==========================================
-    let editingGuideIdx = null;
-    let tempUploadedBase64 = null;
-
     function renderGuideCarousel() {
       const container = document.getElementById("guide-carousel");
       if (!container) return;
       container.innerHTML = "";
-      const hideGear = !!budgetSettings.hideGuideGear;
 
-      guideCardsData.forEach((card, idx) => {
+      guideCardsData.forEach((card) => {
         const posX = card.posX !== undefined ? card.posX : 50;
         const posY = card.posY !== undefined ? card.posY : 50;
         const scale = card.scale !== undefined ? card.scale : 1;
@@ -1376,19 +1286,11 @@
         slide.innerHTML = `
           <img src="${card.img}" referrerpolicy="no-referrer" class="w-full h-full object-cover transition-transform duration-300" style="object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 pointer-events-none"></div>
-          
-          ${!hideGear ? `
-          <button type="button" onclick="openGuideImgEditor(event, ${idx})" title="更換與裁切照片" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-black/45 hover:bg-black/70 text-white/90 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-sm active:scale-90 transition">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </button>
-          ` : ''}
-
           <div class="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between text-white pointer-events-none">
             <div>
               <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded bg-white/25 backdrop-blur-md text-white mb-1 tracking-wide">${card.badge}</span>
               <h3 class="text-sm font-serif font-bold tracking-wide drop-shadow-sm">${card.title}</h3>
             </div>
-            <span class="text-[10px] bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full font-medium border border-white/20">展開 ➔</span>
           </div>
         `;
         container.appendChild(slide);
@@ -1405,105 +1307,6 @@
           ? "w-4 h-1.5 rounded-full bg-sage transition-all duration-300"
           : "w-1.5 h-1.5 rounded-full bg-stone-300 transition-all duration-300";
       });
-    }
-
-    function openGuideImgEditor(event, idx) {
-      event.stopPropagation();
-      editingGuideIdx = idx;
-      tempUploadedBase64 = null;
-      const card = guideCardsData[idx];
-
-      document.getElementById("guide-crop-title").textContent = `編輯照片：${card.title}`;
-      document.getElementById("crop-preview-badge").textContent = card.badge;
-      document.getElementById("crop-preview-heading").textContent = card.title;
-
-      const previewImg = document.getElementById("crop-preview-img");
-      previewImg.src = card.img;
-
-      document.getElementById("slider-crop-scale").value = card.scale || 1;
-      document.getElementById("slider-crop-y").value = card.posY !== undefined ? card.posY : 50;
-      document.getElementById("slider-crop-x").value = card.posX !== undefined ? card.posX : 50;
-
-      updateCropPreviewTransform();
-      openModal("modal-guide-img-edit");
-    }
-
-    function updateCropPreviewTransform() {
-      const scale = parseFloat(document.getElementById("slider-crop-scale").value) || 1;
-      const posY = parseInt(document.getElementById("slider-crop-y").value);
-      const posX = parseInt(document.getElementById("slider-crop-x").value);
-
-      document.getElementById("lbl-crop-scale").textContent = `${Math.round(scale * 100)}%`;
-      document.getElementById("lbl-crop-y").textContent = `${posY}%`;
-      document.getElementById("lbl-crop-x").textContent = `${posX}%`;
-
-      const previewImg = document.getElementById("crop-preview-img");
-      previewImg.style.objectPosition = `${posX}% ${posY}%`;
-      previewImg.style.transformOrigin = `${posX}% ${posY}%`;
-      previewImg.style.transform = `scale(${scale})`;
-    }
-
-    // 相簿選取圖片後，透過 Canvas 自動壓縮轉為高畫質輕量 Base64 (永不破圖)
-    function handleGuideFileSelect(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      showToast("正在處理照片...", "⏳");
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 900;
-          let w = img.width;
-          let h = img.height;
-          if (w > MAX_WIDTH) {
-            h = Math.round((h * MAX_WIDTH) / w);
-            w = MAX_WIDTH;
-          }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, w, h);
-
-          // 壓縮為 JPEG 0.82 畫質，兼顧清晰度與雲端同步速度
-          const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
-          tempUploadedBase64 = dataUrl;
-          document.getElementById("crop-preview-img").src = dataUrl;
-          // 選新照片時自動重置焦點方便調整
-          document.getElementById("slider-crop-scale").value = 1;
-          document.getElementById("slider-crop-y").value = 50;
-          document.getElementById("slider-crop-x").value = 50;
-          updateCropPreviewTransform();
-          showToast("已載入照片，請調整位置！", "✨");
-        };
-        img.src = evt.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function saveGuideImageCrop() {
-      if (editingGuideIdx === null) return;
-      const card = guideCardsData[editingGuideIdx];
-      if (tempUploadedBase64) {
-        card.img = tempUploadedBase64;
-      }
-      card.scale = parseFloat(document.getElementById("slider-crop-scale").value) || 1;
-      card.posY = parseInt(document.getElementById("slider-crop-y").value);
-      card.posX = parseInt(document.getElementById("slider-crop-x").value);
-
-      scheduleAutoSync();
-      renderGuideCarousel();
-      closeModal("modal-guide-img-edit");
-      showToast("背景照片已儲存並永久內嵌！", "✅");
-    }
-
-    function toggleGuideGearVisibility() {
-      const checked = document.getElementById("toggle-hide-guide-gear").checked;
-      budgetSettings.hideGuideGear = checked;
-      scheduleAutoSync();
-      renderGuideCarousel();
-      showToast(checked ? "已隱藏首頁圖片編輯齒輪" : "已顯示首頁圖片編輯齒輪", "⚙️");
     }
 
     // GSAP 卡片展開與收合動畫
@@ -2096,7 +1899,7 @@
     // ==========================================
     // 📱 導航與視圖切換 (5 大獨立主畫面)
     // ==========================================
-    const ALL_MODAL_IDS = ["modal-guide-tax", "modal-guide-fuji", "modal-guide-ootd", "modal-guide-img-edit", "modal-spot-edit", "modal-backup", "modal-json-export"];
+    const ALL_MODAL_IDS = ["modal-guide-tax", "modal-guide-fuji", "modal-guide-ootd", "modal-spot-edit", "modal-backup", "modal-json-export"];
     function openModal(modalId) { document.getElementById(modalId).classList.remove("hidden"); history.pushState({ modal: modalId, view: getCurrentActiveView(), dayIdx: currentDayIndex }, ""); }
     function closeModal(modalId) { const el = document.getElementById(modalId); if (el && !el.classList.contains("hidden")) el.classList.add("hidden"); }
     function getOpenModalId() { for (const id of ALL_MODAL_IDS) { const el = document.getElementById(id); if (el && !el.classList.contains("hidden")) return id; } return null; }
@@ -2110,7 +1913,7 @@
     function navigateBack() {
       const openId = getOpenModalId();
       if (openId) {
-        if (openId.startsWith("modal-guide-") && openId !== "modal-guide-img-edit") closeGuideModal(openId);
+        if (openId.startsWith("modal-guide-")) closeGuideModal(openId);
         else closeModal(openId);
         return;
       }
@@ -2244,8 +2047,6 @@
 
     function openBackupModal() {
       document.getElementById("config-api-url").value = SHEET_API_URL;
-      const gearToggle = document.getElementById("toggle-hide-guide-gear");
-      if (gearToggle) gearToggle.checked = !!budgetSettings.hideGuideGear;
       openModal("modal-backup");
     }
     function closeBackupModal() { closeModal("modal-backup"); }
@@ -2253,7 +2054,7 @@
     
     function resetToDefaultData() {
       tripDays = JSON.parse(JSON.stringify(defaultTripDays)); checklistData = JSON.parse(JSON.stringify(defaultChecklist));
-      dailyNotes = {}; expensesData = []; budgetSettings = { exchangeRate: 0.215, hideGuideGear: false };
+      dailyNotes = {}; expensesData = []; budgetSettings = { exchangeRate: 0.215 };
       packingListData = JSON.parse(JSON.stringify(defaultPackingList));
       guideCardsData = JSON.parse(JSON.stringify(defaultGuideCards));
       scheduleAutoSync(); closeBackupModal(); switchView('home'); renderAllViews(); showToast("已重置所有", "🔄");
