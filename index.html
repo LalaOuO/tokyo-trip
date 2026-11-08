@@ -125,19 +125,19 @@
         <!-- 頂部狀態列 -->
         <div class="px-5 flex items-center justify-between mb-1.5">
           <span class="inline-block px-2.5 py-0.5 bg-sage-light text-sage-dark text-[10px] font-semibold rounded-full tracking-wider uppercase">Tokyo Autumn Walk</span>
-          <div class="flex items-center space-x-1.5">
-            <button onclick="saveToCloudManual()" title="點擊同步雲端" class="flex items-center space-x-1 text-[11px] text-stone-600 hover:text-charcoal bg-white/80 hover:bg-white px-2 py-0.5 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95">
+          <div class="flex items-center space-x-1.5 relative z-50">
+            <button onclick="saveToCloudManual()" title="點擊同步雲端" class="flex items-center space-x-1 text-[11px] text-stone-600 hover:text-charcoal bg-white/80 hover:bg-white px-2 py-0.5 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95 cursor-pointer">
               <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
               <span id="sync-status-text" class="text-[10px]">已同步</span>
             </button>
-            <button onclick="openBackupModal()" class="text-stone-500 hover:text-charcoal bg-white/80 hover:bg-white p-1 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95">
+            <button onclick="openBackupModal()" class="text-stone-500 hover:text-charcoal bg-white/80 hover:bg-white p-1 rounded-full border border-stone-200/70 shadow-2xs transition active:scale-95 cursor-pointer">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </button>
           </div>
         </div>
 
         <!-- 主標題與右上角幻燈片進度點 -->
-        <div class="px-5 flex items-end justify-between">
+        <div class="px-5 flex items-end justify-between relative z-10">
           <div>
             <h1 class="text-xl font-serif font-bold tracking-tight text-charcoal mb-0.5">東京八日遊 (11/10~11/17)</h1>
             <p class="text-[10px] text-muted leading-tight">富士紅葉・昭和銀杏，澀谷潮流，經典體驗</p>
@@ -163,13 +163,13 @@
                 <strong>富士回遊實體票</strong>請於首日 JR 售票機領取！
               </p>
             </div>
-            <button onclick="switchView('tickets')" class="text-[10px] text-amber-900 font-bold bg-amber-200/70 px-2 py-0.5 rounded-md flex-shrink-0 active:scale-95 transition">看憑證</button>
+            <button onclick="switchView('tickets')" class="text-[10px] text-amber-900 font-bold bg-amber-200/70 px-2 py-0.5 rounded-md flex-shrink-0 active:scale-95 transition cursor-pointer">看憑證</button>
           </div>
         </div>
 
-        <!-- 已移除右側「下拉可重新整理最新進度」字眼，保留純淨標題 -->
         <div class="flex items-center justify-between mt-2 pt-1 px-6">
           <h2 class="text-xs font-serif font-bold tracking-wider text-charcoal">每日行程一覽</h2>
+          <span class="text-[10px] text-muted">下拉可重新整理最新進度</span>
         </div>
       </div>
 
@@ -505,6 +505,7 @@
         </div>
 
         <div class="p-5 overflow-y-auto space-y-3.5 text-xs text-charcoal">
+          <!-- 三大指定穿搭 -->
           <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2.5">
             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-terracotta-light text-terracotta-dark">重點指定 OOTD 排程</span>
             
@@ -536,6 +537,7 @@
             </div>
           </div>
 
+          <!-- 鞋襪與氣溫預估 -->
           <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2">
             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sage-light text-sage-dark">11月中旬氣溫預估 & 戰靴配置</span>
             <div class="space-y-1.5 text-[11px] text-muted leading-relaxed">
@@ -625,6 +627,7 @@
         </div>
 
         <div class="p-5 overflow-y-auto space-y-3.5 text-xs text-charcoal">
+          <!-- D8 成田避雷警告 -->
           <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200/90 shadow-2xs text-rose-950 space-y-1.5">
             <div class="flex items-center space-x-1.5">
               <span class="text-sm">🚨</span>
@@ -636,6 +639,7 @@
             </p>
           </div>
 
+          <!-- 市區結帳原則 -->
           <div class="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200/80 shadow-2xs space-y-1.5">
             <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-200/80 text-amber-900">市區購物結帳原則</span>
             <ul class="text-[11px] text-amber-950 space-y-1 leading-relaxed list-disc pl-4 pt-1">
@@ -645,6 +649,7 @@
             </ul>
           </div>
 
+          <!-- Step 1: 海關紅綠燈判定 -->
           <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2">
             <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-sage-light text-sage-dark">第一步：海關紅綠燈判定（確認商品出境）</span>
             <div class="space-y-2 text-[11px] text-muted leading-relaxed">
@@ -665,6 +670,7 @@
             </div>
           </div>
 
+          <!-- Step 2: 機台領現 -->
           <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-2">
             <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-terracotta-light text-terracotta-dark">第二步：前往自助退稅機領取現金</span>
             <p class="text-[11px] text-muted">通過海關綠燈後：選語言 ➔ 刷護照 ➔ 確認明細與總額 ➔ 機台直接吐出現金。</p>
@@ -678,11 +684,12 @@
             </div>
           </div>
 
+          <!-- 注意事項 -->
           <div class="p-3.5 rounded-2xl bg-white border border-stone-200 shadow-2xs space-y-1.5">
             <strong class="text-xs text-charcoal block">💡 領現常見問題與注意事項</strong>
             <ul class="text-[11px] text-muted list-disc pl-4 space-y-1 leading-relaxed">
               <li><strong class="text-charcoal">百位以下零頭自動捨去：</strong>現金機台不退硬幣，百位數以下直接切除（例：顯示退 2,397 日圓，實拿 2,300 日圓）。</li>
-              <li><strong class="text-charcoal">額外手續費：</strong>使用現金退稅會扣除退稅金額*1%。</li>
+              <li><strong class="text-charcoal">額外手續費：</strong>使用現金退稅機台會扣除一筆處理手續費。</li>
               <li><strong class="text-charcoal">結帳與退稅方式分離：</strong>購物時刷信用卡結帳，到機場依然可選擇領取日幣現金。</li>
             </ul>
           </div>
@@ -888,13 +895,13 @@
     let SHEET_API_URL = (storedUrl && !storedUrl.includes("AKfycbxdXS48")) ? storedUrl : DEFAULT_DEPLOYED_URL;
     localStorage.setItem("tokyo_sheet_api_url", SHEET_API_URL);
 
-    const STORAGE_KEY = "tokyo_trip_2026_data_v40";
-    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v40";
-    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v40";
-    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v40";
-    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v40";
-    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v40";
-    const STORAGE_GUIDES_KEY = "tokyo_trip_2026_guides_v40";
+    const STORAGE_KEY = "tokyo_trip_2026_data_v42";
+    const STORAGE_CHECKLIST_KEY = "tokyo_trip_2026_checklist_v42";
+    const STORAGE_NOTES_KEY = "tokyo_trip_2026_notes_v42";
+    const STORAGE_EXPENSES_KEY = "tokyo_trip_2026_expenses_v42";
+    const STORAGE_SETTINGS_KEY = "tokyo_trip_2026_settings_v42";
+    const STORAGE_PACKING_KEY = "tokyo_trip_2026_packing_v42";
+    const STORAGE_GUIDES_KEY = "tokyo_trip_2026_guides_v42";
 
     let tripDays = [];
     let checklistData = [];
@@ -914,7 +921,6 @@
     let currentSelectedCategory = "食物";
     let currentSelectedCurrency = "JPY";
 
-    // 👇 請將妳的三張照片 Base64 貼入下方對應的 img 引號內（焦點座標已依妳調好的位置鎖定）
     const defaultGuideCards = [
       {
         id: "ootd",
@@ -923,12 +929,12 @@
         modalId: "modal-guide-ootd",
         img: "./ootd.jpg",
         posX: 47,
-        posY: 56,
+        posY: -10,
         scale: 1
       },
       {
         id: "fuji",
-        badge: "🗻 富士山必看",
+        badge: "🗻 D3 ~ D4 必看",
         title: "富士山交通與飯店接駁攻略",
         modalId: "modal-guide-fuji",
         img: "./fuji.jpg",
@@ -939,7 +945,7 @@
       {
         id: "tax",
         badge: "🏧 2026/11 新制",
-        title: "日本機場退稅",
+        title: "日本機場退稅與 D8 避雷",
         modalId: "modal-guide-tax",
         img: "./tax.jpg",
         posX: 50,
@@ -947,6 +953,7 @@
         scale: 1
       }
     ];
+
     const EXPENSE_CATEGORIES = [
       { name: "機票", color: "#6B7E91" }, { name: "住宿", color: "#7B8C7E" }, { name: "交通", color: "#A2B29F" },
       { name: "食物", color: "#E09F67" }, { name: "衣服", color: "#C18C7E" }, { name: "彩妝", color: "#D18080" },
@@ -1260,7 +1267,7 @@
     }
 
     // ==========================================
-    // 🖼️ 首頁滿版幻燈新聞 (無齒輪、無展開字樣純淨版)
+    // 🖼️ 首頁滿版幻燈新聞 (無齒輪、高度加高版)
     // ==========================================
     function renderGuideCarousel() {
       const container = document.getElementById("guide-carousel");
@@ -1273,7 +1280,7 @@
         const scale = card.scale !== undefined ? card.scale : 1;
 
         const slide = document.createElement("div");
-        slide.className = "snap-item flex-shrink-0 w-full relative h-[118px] rounded-2xl overflow-hidden shadow-sm border border-stone-200/90 cursor-pointer group select-none bg-stone-800";
+        slide.className = "snap-item flex-shrink-0 w-full relative h-[300px] rounded-2xl overflow-hidden shadow-sm border border-stone-200/90 cursor-pointer group select-none bg-stone-800";
         slide.onclick = () => openGuideModal(card.modalId, slide);
 
         slide.innerHTML = `
