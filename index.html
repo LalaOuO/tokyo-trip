@@ -1472,14 +1472,7 @@
         </div>
         <div class="p-5 overflow-y-auto space-y-4 text-xs text-charcoal">
           
-          <!-- 一鍵隱藏首頁圖片編輯齒輪開關 -->
-          <div class="p-3.5 bg-white rounded-2xl border border-stone-200 shadow-2xs flex items-center justify-between">
-            <div>
-              <span class="font-bold text-charcoal text-xs block">🔒 隱藏首頁幻燈片編輯齒輪</span>
-              <span class="text-[10px] text-muted">照片上傳調整完畢後開啟，保持畫面純淨</span>
-            </div>
-            <input type="checkbox" id="toggle-hide-guide-gear" onchange="toggleGuideGearVisibility()" class="w-5 h-5 accent-sage rounded cursor-pointer">
-          </div>
+          
 
           <div class="p-3.5 bg-white rounded-2xl border border-stone-200 shadow-2xs space-y-2">
             <span class="font-bold text-charcoal text-xs block">🔗 Google 試算表同步網址 (Apps Script Web App)</span>
@@ -2644,42 +2637,7 @@
     let editingGuideIdx = null;
     let tempUploadedBase64 = null;
 
-    function renderGuideCarousel() {
-      const container = document.getElementById("guide-carousel");
-      if (!container) return;
-      container.innerHTML = "";
-      const hideGear = !!budgetSettings.hideGuideGear;
-
-      guideCardsData.forEach((card, idx) => {
-        const posX = card.posX !== undefined ? card.posX : 50;
-        const posY = card.posY !== undefined ? card.posY : 50;
-        const scale = card.scale !== undefined ? card.scale : 1;
-
-        const slide = document.createElement("div");
-        slide.className = "snap-item flex-shrink-0 w-full relative h-[118px] rounded-2xl overflow-hidden shadow-sm border border-stone-200/90 cursor-pointer group select-none bg-stone-800";
-        slide.onclick = () => openGuideModal(card.modalId, slide);
-
-        slide.innerHTML = `
-          <img src="${card.img}" referrerpolicy="no-referrer" class="w-full h-full object-cover transition-transform duration-300" style="object-position: ${posX}% ${posY}%; transform: scale(${scale}); transform-origin: ${posX}% ${posY}%;">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 pointer-events-none"></div>
-          
-          ${!hideGear ? `
-          <button type="button" onclick="openGuideImgEditor(event, ${idx})" title="更換與裁切照片" class="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-black/45 hover:bg-black/70 text-white/90 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-sm active:scale-90 transition">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          </button>
-          ` : ''}
-
-          <div class="absolute bottom-3 left-3.5 right-3.5 flex items-end justify-between text-white pointer-events-none">
-            <div>
-              <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded bg-white/25 backdrop-blur-md text-white mb-1 tracking-wide">${card.badge}</span>
-              <h3 class="text-sm font-serif font-bold tracking-wide drop-shadow-sm">${card.title}</h3>
-            </div>
-            <span class="text-[10px] bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full font-medium border border-white/20">展開 ➔</span>
-          </div>
-        `;
-        container.appendChild(slide);
-      });
-    }
+    function renderGuideCarousel()
 
     function updateCarouselDots(el) {
       const scrollLeft = el.scrollLeft;
